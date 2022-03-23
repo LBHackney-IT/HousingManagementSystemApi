@@ -9,6 +9,7 @@ using Microsoft.OpenApi.Models;
 namespace HousingManagementSystemApi
 {
     using System.Data.SqlClient;
+    using System.Net.Http;
     using Gateways;
     using HousingRepairsOnline.Authentication.DependencyInjection;
     using Repositories;
@@ -38,7 +39,8 @@ namespace HousingManagementSystemApi
                 new UniversalHousingAddressesRepository(() => new SqlConnection(connectionString)));
 
             services.AddHttpClient();
-            services.AddTransient<IAddressesGateway, AddressesDatabaseGateway>();
+            services.AddTransient<IAddressesGateway, AddressesHttpGateway>(_=>
+                new AddressesHttpGateway(new HttpClient(), "", ""));
 
             services.AddSwaggerGen(c =>
             {
