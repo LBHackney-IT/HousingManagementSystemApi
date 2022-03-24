@@ -1,7 +1,7 @@
 service: HousingManagementSystemApi
 provider:
   name: aws
-  runtime: dotnet5.0
+  runtime: dotnet6.0
   memorySize: 2048
   tracing:
     lambda: true
@@ -22,7 +22,7 @@ provider:
 
 package:
   # TODO: Rename zipfile in build.sh and build.cmd to match this
-  artifact: ./bin/release/net5.0/HousingManagementSystemApi.zip
+  artifact: ./bin/release/net6.0/HousingManagementSystemApi.zip
 
 functions:
   HousingManagementSystemApi:
