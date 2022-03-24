@@ -29,10 +29,19 @@ commands:
     parameters:
       stage:
         type: string
+      lincoln-nuget-username:
+        type: string
+        default: $LINCOLN_NUGET_USERNAME
+      lincoln-nuget-password:
+        type: string
+        default: $LINCOLN_PACKAGES_TOKEN
     steps:
       - *attach_workspace
       - checkout
       - setup_remote_docker
+      - run:
+          name: Add HACT package
+          command: dotnet nuget add source --username <<parameters.lincoln-nuget-username>> --password  <<parameters.lincoln-nuget-password>>  --store-password-in-clear-text --name github "https://nuget.pkg.github.com/City-of-Lincoln-Council/index.json"
       - run:
           name: Install Node.js
           command: |
