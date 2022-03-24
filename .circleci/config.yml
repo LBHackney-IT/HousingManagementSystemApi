@@ -108,31 +108,30 @@ jobs:
       - run:
           name: Run tests
           command: dotnet test
-  deploy-to-development:
+  deploy-to-devscratch:
     executor: docker-dotnet
     steps:
       - deploy-lambda:
-          stage: "development"
-  assume-role-development:
+          stage: "devscratch"
+  assume-role-devscratch:
     executor: docker-python
     steps:
       - assume-role-and-persist-workspace:
-          aws-account: $AWS_ACCOUNT_DEVELOPMENT
+          aws-account: $AWS_ACCOUNT_DEVSCRATCH
 
 workflows:
-  check-and-deploy-development:
+  check-and-deploy-devscratch:
     jobs:
       - check-code-formatting:
           context: api-nuget-token-context
       - build-and-test:
           context: api-nuget-token-context
-      - assume-role-development:
-          context: api-assume-role-housing-development-context
+      - assume-role-devscratch:
           requires:
             - build-and-test
           filters:
             branches:
-              only: development
-      - deploy-to-development:
+              only: devscratch
+      - deploy-to-devscratch:
           requires:
-            - assume-role-development
+            - assume-role-devscratch
