@@ -23,6 +23,35 @@ references:
     attach_workspace:
       at: *workspace_root
 
+commands:
+  deploy-lambda:
+    description: "Deploys API via Serverless"
+    parameters:
+      stage:
+        type: string
+    steps:
+      - *attach_workspace
+      - checkout
+      - setup_remote_docker
+      - run:
+          name: Install Node.js
+          command: |
+            curl -sL https://deb.nodesource.com/setup_13.x | bash -
+            apt-get update && apt-get install -y nodejs
+      - run:
+          name: Install serverless CLI
+          command: npm i -g serverless
+      - run:
+          name: Build lambda
+          command: |
+            cd ./HousingManagementSystemApi/
+            chmod +x ./build.sh
+            ./build.sh
+      - run:
+          name: Deploy lambda
+          command: |
+            cd ./HousingManagementSystemApi/
+            sls deploy --stage <<parameters.stage>> --conceal
 jobs:
   check-code-formatting:
     executor: docker-dotnet
@@ -55,6 +84,11 @@ jobs:
       - run:
           name: Run tests
           command: dotnet test
+  deploy-to-development:
+    executor: docker-dotnet
+    steps:
+      - deploy-lambda:
+          stage: "development"
 
 workflows:
   check-and-deploy-development:
@@ -63,3 +97,6 @@ workflows:
           context: api-nuget-token-context
       - build-and-test:
           context: api-nuget-token-context
+      - deploy-to-development:
+          requires:
+            - build-and-test
