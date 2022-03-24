@@ -39,7 +39,7 @@ namespace HousingManagementSystemApi
                 new UniversalHousingAddressesRepository(() => new SqlConnection(connectionString)));
 
             services.AddHttpClient();
-            services.AddTransient<IAddressesGateway, AddressesHttpGateway>(_=>
+            services.AddTransient<IAddressesGateway, AddressesHttpGateway>(_ =>
                 new AddressesHttpGateway(new HttpClient(), "", ""));
 
             services.AddSwaggerGen(c =>

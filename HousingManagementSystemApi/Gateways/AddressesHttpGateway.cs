@@ -49,7 +49,7 @@ namespace HousingManagementSystemApi.Gateways
 
             // if (response.StatusCode == HttpStatusCode.OK)
             // {
-                // data = await response.Content.ReadFromJsonAsync<List<PropertyAddress>>();
+            // data = await response.Content.ReadFromJsonAsync<List<PropertyAddress>>();
             // }
 
             return data;
