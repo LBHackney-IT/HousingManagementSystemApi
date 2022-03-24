@@ -15,7 +15,7 @@ executors:
       - image: "hashicorp/terraform:light"
   docker-dotnet:
     docker:
-      - image: mcr.microsoft.com/dotnet/core/sdk:3.1
+      - image: mcr.microsoft.com/dotnet/sdk:5.0
 
 references:
   workspace_root: &workspace_root "~"
@@ -45,3 +45,11 @@ jobs:
       - run:
           name: Run tests
           command: dotnet test
+
+workflows:
+  check-and-deploy-development:
+    jobs:
+      - check-code-formatting:
+          context: api-nuget-token-context
+      - build-and-test:
+          context: api-nuget-token-context
