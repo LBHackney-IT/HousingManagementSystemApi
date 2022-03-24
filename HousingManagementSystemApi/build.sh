@@ -8,7 +8,7 @@ then
 fi
 
 #dotnet restore
-dotnet tool install --global Amazon.Lambda.Tools --version 4.0.0
+dotnet tool install --global Amazon.Lambda.Tools --version 5.0.0
 
 
 # (for CI) ensure that the newly-installed tools are on PATH
@@ -18,4 +18,4 @@ then
 fi
 
 dotnet restore
-dotnet lambda package --configuration release --framework netcoreapp3.1 --output-package ./bin/release/netcoreapp3.1/HousingManagementSystemApi.zip
+dotnet lambda package --configuration release --framework net5.0 --output-package ./bin/release/net5.0/HousingManagementSystemApi.zip
