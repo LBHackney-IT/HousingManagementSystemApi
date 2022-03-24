@@ -24,6 +24,21 @@ references:
       at: *workspace_root
 
 commands:
+  assume-role-and-persist-workspace:
+    description: "Assumes deployment role and persists credentials across jobs"
+    parameters:
+      aws-account:
+        type: string
+    steps:
+      - checkout
+      - aws_assume_role/assume_role:
+          account: <<parameters.aws-account>>
+          profile_name: default
+          role: "LBH_Circle_CI_Deployment_Role"
+      - persist_to_workspace:
+          root: *workspace_root
+          paths:
+            - .aws
   deploy-lambda:
     description: "Deploys API via Serverless"
     parameters:
@@ -98,6 +113,11 @@ jobs:
     steps:
       - deploy-lambda:
           stage: "development"
+  assume-role-development:
+    executor: docker-python
+    steps:
+      - assume-role-and-persist-workspace:
+          aws-account: $AWS_ACCOUNT_DEVELOPMENT
 
 workflows:
   check-and-deploy-development:
@@ -106,6 +126,13 @@ workflows:
           context: api-nuget-token-context
       - build-and-test:
           context: api-nuget-token-context
-      - deploy-to-development:
+      - assume-role-development:
+          context: api-assume-role-housing-development-context
           requires:
             - build-and-test
+          filters:
+            branches:
+              only: development
+      - deploy-to-development:
+          requires:
+            - assume-role-development
