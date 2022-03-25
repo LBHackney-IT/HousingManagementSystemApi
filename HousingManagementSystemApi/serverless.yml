@@ -21,7 +21,6 @@ provider:
           rateLimit: 100
 
 package:
-  # TODO: Rename zipfile in build.sh and build.cmd to match this
   artifact: ./bin/release/net6.0/HousingManagementSystemApi.zip
 
 functions:
@@ -30,9 +29,9 @@ functions:
     handler: HousingManagementSystemApi::HousingManagementSystemApi.LambdaEntryPoint::FunctionHandlerAsync
     role: lambdaExecutionRole
     environment:
-    # TODO: Create ssm variables for this API's postgres mirror then rename HousingManagementSystemApi below to match api name
-    # TODO: Remove this line if DynamoDb is being used
-    # CONNECTION_STRING: Host=${ssm:/m-test-api/${self:provider.stage}/postgres-hostname};Port=${ssm:/m-test-api/${self:provider.stage}/postgres-port};Database=m-test-api-mirror;Username=${ssm:/m-test-api/${self:provider.stage}/postgres-username};Password=${ssm:/m-test-api/${self:provider.stage}/postgres-password}
+      AUTHENTICATION_IDENTIFIER: ${ssm:/HousingManagementSystemApi/authentication-identifier/${self:provider.stage}}
+      JWT_SECRET: ${ssm:/HousingManagementSystemApi/jwt-secret/${self:provider.stage}}
+      UNIVERSAL_HOUSING_CONNECTION_STRING: ${ssm:/HousingManagementSystemApi/universal-housing-connection-string/${self:provider.stage}}
     events:
       - http:
           path: /{proxy+}
