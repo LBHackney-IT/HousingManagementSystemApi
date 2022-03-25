@@ -1,6 +1,6 @@
+using System.Diagnostics.CodeAnalysis;
 using Amazon.Lambda.AspNetCoreServer;
 using Microsoft.AspNetCore.Hosting;
-using System.Diagnostics.CodeAnalysis;
 
 namespace HousingManagementSystemApi
 {
