@@ -75,7 +75,7 @@ commands:
           name: Deploy lambda
           command: |
             cd ./HousingManagementSystemApi/
-            sls remove --stage <<parameters.stage>> 
+            sls deploy --stage <<parameters.stage>> --conceal
 jobs:
   check-code-formatting:
     executor: docker-dotnet
@@ -108,30 +108,31 @@ jobs:
       - run:
           name: Run tests
           command: dotnet test
-  deploy-to-devscratch:
+  deploy-to-development:
     executor: docker-dotnet
     steps:
       - deploy-lambda:
-          stage: "devscratch"
-  assume-role-devscratch:
+          stage: "development"
+  assume-role-development:
     executor: docker-python
     steps:
       - assume-role-and-persist-workspace:
-          aws-account: $AWS_ACCOUNT_DEVSCRATCH
+          aws-account: $AWS_ACCOUNT_DEVELOPMENT
 
 workflows:
-  check-and-deploy-devscratch:
+  check-and-deploy-development:
     jobs:
       - check-code-formatting:
           context: api-nuget-token-context
       - build-and-test:
           context: api-nuget-token-context
-      - assume-role-devscratch:
+      - assume-role-development:
+          context: api-assume-role-housing-development-context
           requires:
             - build-and-test
           filters:
             branches:
-              only: devscratch
-      - deploy-to-devscratch:
+              only: development
+      - deploy-to-development:
           requires:
-            - assume-role-devscratch
+            - assume-role-development
