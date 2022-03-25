@@ -75,7 +75,7 @@ commands:
           name: Deploy lambda
           command: |
             cd ./HousingManagementSystemApi/
-            sls deploy --stage <<parameters.stage>> --conceal
+            sls remove --stage <<parameters.stage>> 
 jobs:
   check-code-formatting:
     executor: docker-dotnet
