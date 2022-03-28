@@ -29,9 +29,9 @@ functions:
     handler: HousingManagementSystemApi::HousingManagementSystemApi.LambdaEntryPoint::FunctionHandlerAsync
     role: lambdaExecutionRole
     environment:
-      AUTHENTICATION_IDENTIFIER: ${ssm:/HousingManagementSystemApi/authentication-identifier/${self:provider.stage}}
-      JWT_SECRET: ${ssm:/HousingManagementSystemApi/jwt-secret/${self:provider.stage}}
-      UNIVERSAL_HOUSING_CONNECTION_STRING: ${ssm:/HousingManagementSystemApi/universal-housing-connection-string/${self:provider.stage}}
+      AUTHENTICATION_IDENTIFIER: ${ssm:/HousingManagementSystemApi/${self:provider.stage}/authentication-identifier}
+      JWT_SECRET: ${ssm:/HousingManagementSystemApi/${self:provider.stage}/jwt-secret}
+      UNIVERSAL_HOUSING_CONNECTION_STRING: ${ssm:/HousingManagementSystemApi/${self:provider.stage}/universal-housing-connection-string}
     events:
       - http:
           path: /{proxy+}
