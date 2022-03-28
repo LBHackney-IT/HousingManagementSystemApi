@@ -44,6 +44,15 @@ commands:
     parameters:
       environment:
         type: string
+      authentication_identifier:
+        type: string
+        default: $AUTHENTICATION_IDENTIFIER
+      jwt_secret:
+        type: string
+        default: $JWT_SECRET
+      universal_housing_connection_string:
+        type: string
+        default: $UNIVERSAL_HOUSING_CONNECTION_STRING
     steps:
       - *attach_workspace
       - checkout
@@ -57,7 +66,7 @@ commands:
           name: apply
           command: |
             cd ./terraform/<<parameters.environment>>/
-            terraform destroy -auto-approve
+            terraform apply -var="authentication_identifier=<<parameters.authentication_identifier>>" -var="jwt_secret=<<parameters.jwt_secret>>" -var="universal_housing_connection_string=<<parameters.universal_housing_connection_string>>" -auto-approve
   deploy-lambda:
     description: "Deploys API via Serverless"
     parameters:
