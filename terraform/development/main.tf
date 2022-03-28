@@ -15,20 +15,3 @@ terraform {
     }
 }
 
-
-resource "aws_ssm_parameter" "authentication_identifier" {
-    name  = "/HousingManagementSystemApi/development/authentication-identifier"
-    type  = "String"
-    value = var.authentication_identifier
-}
-resource "aws_ssm_parameter" "jwt_secret" {
-    name  = "/HousingManagementSystemApi/development/jwt-secret"
-    type  = "String"
-    value = var.jwt_secret
-}
-resource "aws_ssm_parameter" "universal_housing_connection_string" {
-    name  = "/HousingManagementSystemApi/development/universal-housing-connection-string"
-    type  = "String"
-    value = var.universal_housing_connection_string
-}
-
