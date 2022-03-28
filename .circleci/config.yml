@@ -146,6 +146,44 @@ jobs:
           authentication_identifier: $AUTHENTICATION_IDENTIFIER
           jwt_secret: $JWT_SECRET
           universal_housing_connection_string: $UNIVERSAL_HOUSING_CONNECTION_STRING
+  deploy-to-staging:
+    executor: docker-dotnet
+    steps:
+      - authenticate-nuget
+      - deploy-lambda:
+          stage: "staging"
+  assume-role-staging:
+    executor: docker-python
+    steps:
+      - assume-role-and-persist-workspace:
+          aws-account: $AWS_ACCOUNT_STAGING
+  terraform-init-and-apply-to-staging:
+    executor: docker-terraform
+    steps:
+      - terraform-init-then-apply:
+          environment: "staging"
+          authentication_identifier: $AUTHENTICATION_IDENTIFIER
+          jwt_secret: $JWT_SECRET
+          universal_housing_connection_string: $UNIVERSAL_HOUSING_CONNECTION_STRING
+  deploy-to-production:
+    executor: docker-dotnet
+    steps:
+      - authenticate-nuget
+      - deploy-lambda:
+          stage: "production"
+  assume-role-production:
+    executor: docker-python
+    steps:
+      - assume-role-and-persist-workspace:
+          aws-account: $AWS_ACCOUNT_DEVELOPMENT
+  terraform-init-and-apply-to-production:
+    executor: docker-terraform
+    steps:
+      - terraform-init-then-apply:
+          environment: "production"
+          authentication_identifier: $AUTHENTICATION_IDENTIFIER
+          jwt_secret: $JWT_SECRET
+          universal_housing_connection_string: $UNIVERSAL_HOUSING_CONNECTION_STRING
 
 workflows:
   check-and-deploy-development:
@@ -170,3 +208,55 @@ workflows:
       - deploy-to-development:
           requires:
             - terraform-init-and-apply-to-development
+  check-and-deploy-staging-and-production:
+    jobs:
+      - build-and-test:
+          context: api-nuget-token-context
+          filters:
+            branches:
+              only: master
+      - assume-role-staging:
+          context: api-assume-role-housing-staging-context
+          requires:
+            - build-and-test
+          filters:
+            branches:
+              only: master
+      - terraform-init-and-apply-to-staging:
+          requires:
+            - assume-role-staging
+          filters:
+            branches:
+              only: master
+      - deploy-to-staging:
+          context: api-nuget-token-context
+          requires:
+            - terraform-init-and-apply-to-staging
+          filters:
+            branches:
+              only: master
+      - permit-production-release:
+          type: approval
+          requires:
+            - deploy-to-staging
+      - assume-role-production:
+          context: api-assume-role-housing-production-context
+          requires:
+            - permit-production-release
+          filters:
+            branches:
+              only: master
+      - terraform-init-and-apply-to-production:
+          requires:
+            - assume-role-production
+          filters:
+            branches:
+              only: master
+      - deploy-to-production:
+          context: api-nuget-token-context
+          requires:
+            - permit-production-release
+            - terraform-init-and-apply-to-production
+          filters:
+            branches:
+              only: master
