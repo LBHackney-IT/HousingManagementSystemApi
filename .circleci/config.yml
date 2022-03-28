@@ -46,13 +46,10 @@ commands:
         type: string
       authentication_identifier:
         type: string
-        default: $AUTHENTICATION_IDENTIFIER
       jwt_secret:
         type: string
-        default: $JWT_SECRET
       universal_housing_connection_string:
         type: string
-        default: $UNIVERSAL_HOUSING_CONNECTION_STRING
     steps:
       - *attach_workspace
       - checkout
@@ -151,6 +148,9 @@ jobs:
     steps:
       - terraform-init-then-apply:
           environment: "development"
+          authentication_identifier: $AUTHENTICATION_IDENTIFIER
+          jwt_secret: $JWT_SECRET
+          universal_housing_connection_string: $UNIVERSAL_HOUSING_CONNECTION_STRING
 
 workflows:
   check-and-deploy-development:
