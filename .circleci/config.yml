@@ -131,7 +131,7 @@ jobs:
     executor: docker-python
     steps:
       - assume-role-and-persist-workspace:
-          aws-account: $AWS_ACCOUNT_DEVELOPMENT
+          aws-account: $AWS_ACCOUNT_PRODUCTION
 
 workflows:
   check-and-deploy-development:
