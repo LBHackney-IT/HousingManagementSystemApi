@@ -156,14 +156,14 @@ workflows:
           context: api-nuget-token-context
           filters:
             branches:
-              only: master
+              only: main
       - assume-role-staging:
           context: api-assume-role-housing-staging-context
           requires:
             - build-and-test
           filters:
             branches:
-              only: master
+              only: main
       - deploy-to-staging:
           context: api-nuget-token-context
           requires:
