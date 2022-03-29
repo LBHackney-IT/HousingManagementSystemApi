@@ -170,7 +170,7 @@ workflows:
             - assume-role-staging
           filters:
             branches:
-              only: master
+              only: main
       - permit-production-release:
           type: approval
           requires:
@@ -181,7 +181,7 @@ workflows:
             - permit-production-release
           filters:
             branches:
-              only: master
+              only: main
       - deploy-to-production:
           context: api-nuget-token-context
           requires:
@@ -189,4 +189,4 @@ workflows:
             - assume-role-production
           filters:
             branches:
-              only: master
+              only: main
