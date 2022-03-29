@@ -8,11 +8,9 @@ using Microsoft.OpenApi.Models;
 
 namespace HousingManagementSystemApi
 {
-    using System.Data.SqlClient;
     using System.Net.Http;
     using Gateways;
     using HousingRepairsOnline.Authentication.DependencyInjection;
-    using Repositories;
     using UseCases;
 
     public class Startup
@@ -34,10 +32,6 @@ namespace HousingManagementSystemApi
             services.AddControllers();
             services.AddTransient<IRetrieveAddressesUseCase, RetrieveAddressesUseCase>();
 
-            var connectionString = GetEnvironmentVariable("UNIVERSAL_HOUSING_CONNECTION_STRING");
-            services.AddTransient<IAddressesRepository, UniversalHousingAddressesRepository>(_ =>
-                new UniversalHousingAddressesRepository(() => new SqlConnection(connectionString)));
-
             services.AddHttpClient();
             services.AddTransient<IAddressesGateway, AddressesHttpGateway>(_ =>
                 new AddressesHttpGateway(new HttpClient(), "", ""));
@@ -47,8 +41,7 @@ namespace HousingManagementSystemApi
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "HousingManagementSystemApi", Version = "v1" });
             });
 
-            services.AddHealthChecks()
-                .AddSqlServer(connectionString, name: "Universal Housing database");
+            services.AddHealthChecks();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
