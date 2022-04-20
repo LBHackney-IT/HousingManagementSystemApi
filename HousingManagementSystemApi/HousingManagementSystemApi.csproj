@@ -8,8 +8,8 @@
     <PackageReference Include="Amazon.Lambda.AspNetCoreServer" Version="7.1.0" />
     <PackageReference Include="AspNetCore.HealthChecks.SqlServer" Version="6.0.1" />
     <PackageReference Include="Dapper" Version="2.0.123" />
-    <PackageReference Include="HACT.Dtos" Version="1.1.0" />
-    <PackageReference Include="HousingRepairsOnline.Authentication" Version="1.0.0" />
+    <PackageReference Include="HACT.Dtos" Version="1.0.0-Hackney" />
+    <PackageReference Include="HousingRepairsOnline.Authentication" Version="1.0.0-Hackney" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Versioning" Version="5.0.0" />
     <PackageReference Include="Moq.Dapper" Version="1.0.4" />
     <PackageReference Include="Sentry.AspNetCore" Version="3.13.0" />
