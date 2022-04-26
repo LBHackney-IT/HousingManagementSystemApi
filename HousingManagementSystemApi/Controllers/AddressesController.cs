@@ -5,9 +5,11 @@ namespace HousingManagementSystemApi.Controllers
     using System;
     using Sentry;
     using UseCases;
+    using Constants = HousingManagementSystemApi.Constants;
 
     [ApiController]
-    [Route("[controller]")]
+    [Route($"{Constants.ApiV1RoutePrefix}[controller]")]
+    [ApiVersion("1.0")]
     public class AddressesController : ControllerBase
     {
         private readonly IRetrieveAddressesUseCase retrieveAddressesUseCase;
