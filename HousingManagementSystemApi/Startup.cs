@@ -77,10 +77,10 @@ namespace HousingManagementSystemApi
 
         private void AddHttpClients(IServiceCollection services)
         {
-            // GatewayOptions options = new GatewayOptions();
-            // Configuration.Bind(nameof(GatewayOptions), options);
+            var uri = new Uri(GetEnvironmentVariable("HOUSING_SEARCH_API_URI"));
+            var key = GetEnvironmentVariable("HOUSING_SEARCH_API_KEY");
 
-            // AddClient(services, HttpClientNames.Properties, options.PropertiesAPI, options.PropertiesAPIKey);
+            AddClient(services, HttpClientNames.HousingSearch, uri, key);
         }
         private static void AddClient(IServiceCollection services, string clientName, Uri uri, string key)
         {
@@ -89,6 +89,11 @@ namespace HousingManagementSystemApi
                 c.BaseAddress = uri;
                 c.DefaultRequestHeaders.Add("Authorization", key);
             });
+        }
+
+        static class HttpClientNames
+        {
+            public const string HousingSearch = "housing-search";
         }
     }
 }
