@@ -30,17 +30,16 @@ namespace HousingManagementSystemApi.Gateways
             {
                new PropertyAddress()
                {
-                   PostalCode = "LN1 3AT",
-                   StreetName = "Diagon Alley",
-                   Country = CountryCode.AD,
+                   PostalCode = "E8 3JD",
                    Reference = new Reference()
                    {
+                       ID = "00075109",
                        AllocatedBy = "X",
                        Description = "Y"
                    },
                    AddressLine = new List<string>
                    {
-                       "AddressLine"
+                       "1-19 355 Queensbridge Road"
                    },
                    CityName = "London"
 
