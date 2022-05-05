@@ -32,6 +32,8 @@ functions:
     environment:
       AUTHENTICATION_IDENTIFIER: ${ssm:/HousingManagementSystemApi/${self:provider.stage}/authentication-identifier}
       JWT_SECRET: ${ssm:/HousingManagementSystemApi/${self:provider.stage}/jwt-secret}
+      SENTRY_DSN: ${ssm:/HousingManagementSystemApi/${self:provider.stage}/sentry-dsn}
+      SENTRY_ENVIRONMENT: ${self:provider.stage}
       HOUSING_SEARCH_API_URI: ${ssm:/HousingManagementSystemApi/${self:provider.stage}/housing-search-api-uri}
       HOUSING_SEARCH_API_KEY:  ${ssm:/HousingManagementSystemApi/${self:provider.stage}/housing-search-api-key}
       PROPERTIES_API_URI: ${ssm:/HousingManagementSystemApi/${self:provider.stage}/properties-api-uri}
