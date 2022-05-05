@@ -33,8 +33,9 @@ namespace HousingManagementSystemApi
             services.AddTransient<IRetrieveAddressesUseCase, RetrieveAddressesUseCase>();
 
             services.AddHttpClient();
-            services.AddTransient<IAddressesGateway, AddressesHttpGateway>(_ =>
-                new AddressesHttpGateway(new HttpClient(), "", ""));
+
+
+            services.AddTransient<IAddressesGateway, AddressesHttpGateway>();
 
             services.AddSwaggerGen(c =>
             {
@@ -73,5 +74,21 @@ namespace HousingManagementSystemApi
         private static string GetEnvironmentVariable(string name) =>
             Environment.GetEnvironmentVariable(name) ??
             throw new InvalidOperationException($"Incorrect configuration: '{name}' environment variable must be set");
+
+        private void AddHttpClients(IServiceCollection services)
+        {
+            // GatewayOptions options = new GatewayOptions();
+            // Configuration.Bind(nameof(GatewayOptions), options);
+
+            // AddClient(services, HttpClientNames.Properties, options.PropertiesAPI, options.PropertiesAPIKey);
+        }
+        private static void AddClient(IServiceCollection services, string clientName, Uri uri, string key)
+        {
+            services.AddHttpClient(clientName, c =>
+            {
+                c.BaseAddress = uri;
+                c.DefaultRequestHeaders.Add("Authorization", key);
+            });
+        }
     }
 }

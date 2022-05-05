@@ -8,15 +8,11 @@ namespace HousingManagementSystemApi.Gateways
 {
     public class AddressesHttpGateway : IAddressesGateway
     {
-        private readonly HttpClient httpClient;
-        private readonly string addressesApiUrl;
-        private readonly string addressesApiKey;
+        private readonly IHttpClientFactory httpClientFactory;
 
-        public AddressesHttpGateway(HttpClient httpClient, string addressesApiUrl, string addressesApiKey)
+        public AddressesHttpGateway(IHttpClientFactory httpClientFactory)
         {
-            this.httpClient = httpClient;
-            this.addressesApiUrl = addressesApiUrl;
-            this.addressesApiKey = addressesApiKey;
+            this.httpClientFactory = httpClientFactory;
         }
 
         public async Task<IEnumerable<PropertyAddress>> SearchByPostcode(string postcode)
