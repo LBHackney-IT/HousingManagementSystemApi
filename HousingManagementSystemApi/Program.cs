@@ -20,17 +20,7 @@ namespace HousingManagementSystemApi
             Host.CreateDefaultBuilder(args)
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
-                    // webBuilder.UseSentry(o =>
-                    // {
-                    //     o.Dsn = Environment.GetEnvironmentVariable("SENTRY_DSN");
-                    //
-                    //     var environment = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
-                    //     if (environment == Environments.Development)
-                    //     {
-                    //         o.Debug = true;
-                    //         o.TracesSampleRate = 1.0;
-                    //     }
-                    // });
+                    webBuilder.SetupSentry();
                     webBuilder.UseStartup<Startup>();
                 });
     }
