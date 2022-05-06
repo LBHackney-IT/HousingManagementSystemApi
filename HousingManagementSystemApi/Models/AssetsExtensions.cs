@@ -29,7 +29,6 @@ public static class AssetsExtensions
         {
             AddressLine = addressLines.ToArray(),
             PostalCode = asset.AssetAddress.PostCode,
-            BuildingNumber = "PLACEHOLDER",
             Reference = propertyReference
         };
 
