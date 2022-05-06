@@ -32,8 +32,7 @@ namespace HousingManagementSystemApi
             services.AddControllers();
             services.AddTransient<IRetrieveAddressesUseCase, RetrieveAddressesUseCase>();
 
-            services.AddHttpClient();
-
+            AddHttpClients(services);
 
             services.AddTransient<IAddressesGateway, AddressesHttpGateway>();
 
@@ -75,13 +74,14 @@ namespace HousingManagementSystemApi
             Environment.GetEnvironmentVariable(name) ??
             throw new InvalidOperationException($"Incorrect configuration: '{name}' environment variable must be set");
 
-        private void AddHttpClients(IServiceCollection services)
+        private static void AddHttpClients(IServiceCollection services)
         {
             var uri = new Uri(GetEnvironmentVariable("HOUSING_SEARCH_API_URI"));
             var key = GetEnvironmentVariable("HOUSING_SEARCH_API_KEY");
 
             AddClient(services, HttpClientNames.HousingSearch, uri, key);
         }
+
         private static void AddClient(IServiceCollection services, string clientName, Uri uri, string key)
         {
             services.AddHttpClient(clientName, c =>
@@ -89,11 +89,6 @@ namespace HousingManagementSystemApi
                 c.BaseAddress = uri;
                 c.DefaultRequestHeaders.Add("Authorization", key);
             });
-        }
-
-        static class HttpClientNames
-        {
-            public const string HousingSearch = "housing-search";
         }
     }
 }
