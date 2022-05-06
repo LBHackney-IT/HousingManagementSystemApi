@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Json;
@@ -17,35 +18,35 @@ namespace HousingManagementSystemApi.Gateways
 
         public async Task<IEnumerable<PropertyAddress>> SearchByPostcode(string postcode)
         {
-            // var request = new HttpRequestMessage(HttpMethod.Get,
-            //     $"{addressesApiUrl}/address?postcode={postcode}");
-            // request.Headers.Add("X-API-Key", addressesApiKey);
-            // var response = await httpClient.SendAsync(request);
-            //
-            var data = new List<PropertyAddress>
-            {
-               new PropertyAddress()
-               {
-                   PostalCode = "E8 3JD",
-                   Reference = new Reference()
-                   {
-                       ID = "00075109",
-                       AllocatedBy = "X",
-                       Description = "Y"
-                   },
-                   AddressLine = new List<string>
-                   {
-                       "1-19 355 Queensbridge Road"
-                   },
-                   CityName = "London"
+            var httpClient = httpClientFactory.CreateClient(HttpClientNames.HousingSearch);
+            var request = new HttpRequestMessage(HttpMethod.Get,
+                $"search/assets?searchText={postcode}&pageSize=100");
+            var response = await httpClient.SendAsync(request);
 
-               }
-            };
-
-            // if (response.StatusCode == HttpStatusCode.OK)
+            // var data = new List<PropertyAddress>
             // {
-            // data = await response.Content.ReadFromJsonAsync<List<PropertyAddress>>();
-            // }
+            //    new PropertyAddress()
+            //    {
+            //        PostalCode = "E8 3JD",
+            //        Reference = new Reference()
+            //        {
+            //            ID = "00075109",
+            //            AllocatedBy = "X",
+            //            Description = "Y"
+            //        },
+            //        AddressLine = new List<string>
+            //        {
+            //            "1-19 355 Queensbridge Road"
+            //        },
+            //        CityName = "London"
+            //
+            //    }
+            // };
+            var data = Enumerable.Empty<PropertyAddress>();
+            if (response.StatusCode == HttpStatusCode.OK)
+            {
+                data = await response.Content.ReadFromJsonAsync<List<PropertyAddress>>();
+            }
 
             return data;
         }
