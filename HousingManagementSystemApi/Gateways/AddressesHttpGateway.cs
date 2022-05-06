@@ -7,6 +7,8 @@ using System.Threading.Tasks;
 using HACT.Dtos;
 namespace HousingManagementSystemApi.Gateways
 {
+    using Models;
+
     public class AddressesHttpGateway : IAddressesGateway
     {
         private readonly IHttpClientFactory httpClientFactory;
@@ -23,32 +25,13 @@ namespace HousingManagementSystemApi.Gateways
                 $"search/assets?searchText={postcode}&pageSize=100");
             var response = await httpClient.SendAsync(request);
 
-            // var data = new List<PropertyAddress>
-            // {
-            //    new PropertyAddress()
-            //    {
-            //        PostalCode = "E8 3JD",
-            //        Reference = new Reference()
-            //        {
-            //            ID = "00075109",
-            //            AllocatedBy = "X",
-            //            Description = "Y"
-            //        },
-            //        AddressLine = new List<string>
-            //        {
-            //            "1-19 355 Queensbridge Road"
-            //        },
-            //        CityName = "London"
-            //
-            //    }
-            // };
-            var data = Enumerable.Empty<PropertyAddress>();
+            var data = new HousingSearchApiResponse();
             if (response.StatusCode == HttpStatusCode.OK)
             {
-                data = await response.Content.ReadFromJsonAsync<List<PropertyAddress>>();
+                data = await response.Content.ReadFromJsonAsync<HousingSearchApiResponse>();
             }
 
-            return data;
+            return Enumerable.Empty<PropertyAddress>();
         }
     }
 }
