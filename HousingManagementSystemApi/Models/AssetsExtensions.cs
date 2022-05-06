@@ -1,11 +1,10 @@
 namespace HousingManagementSystemApi.Models;
 
-using System.Collections.Generic;
 using System.Linq;
 using Hackney.Shared.Asset.Domain;
 using HACT.Dtos;
 
-public class AssetsExtensions
+public static class AssetsExtensions
 {
     public static PropertyAddress ToHactPropertyAddress(this Asset asset)
     {
@@ -16,15 +15,15 @@ public class AssetsExtensions
                 ID = asset.AssetId,
                 AllocatedBy = "HousingSearchApi",
             };
-        IEnumerable<string> addressLines = new List<string>()
-        {
-            asset.AssetAddress.AddressLine1,
-            asset.AssetAddress.AddressLine2,
-            asset.AssetAddress.AddressLine3,
-            asset.AssetAddress.AddressLine4
-        };
 
-        addressLines = addressLines.Where(x => !string.IsNullOrWhiteSpace(x));
+        var addressLines =
+            new[]
+            {
+                asset.AssetAddress.AddressLine1,
+                asset.AssetAddress.AddressLine2,
+                asset.AssetAddress.AddressLine3,
+                asset.AssetAddress.AddressLine4
+            }.Where(x => !string.IsNullOrWhiteSpace(x));
 
         var result = new PropertyAddress
         {
