@@ -31,7 +31,9 @@ namespace HousingManagementSystemApi.Gateways
                 data = await response.Content.ReadFromJsonAsync<HousingSearchApiResponse>();
             }
 
-            return Enumerable.Empty<PropertyAddress>();
+            var result = data.Results.Assets.Select(asset => asset.ToHactPropertyAddress());
+
+            return result;
         }
     }
 }
