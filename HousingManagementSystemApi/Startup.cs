@@ -34,7 +34,8 @@ namespace HousingManagementSystemApi
 
             AddHttpClients(services);
 
-            services.AddTransient<IAddressesGateway, HousingSearchGateway>();
+            // services.AddTransient<IAddressesGateway, HousingSearchGateway>();
+            services.AddTransient<IAddressesGateway, PropertiesGateway>();
 
             services.AddSwaggerGen(c =>
             {
@@ -77,6 +78,7 @@ namespace HousingManagementSystemApi
         private static void AddHttpClients(IServiceCollection services)
         {
             AddHttpClient(services, HttpClientNames.HousingSearch, "HOUSING_SEARCH_API_URI", "HOUSING_SEARCH_API_KEY");
+            AddHttpClient(services, HttpClientNames.Properties, "PROPERTIES_API_URI", "PROPERTIES_API_KEY");
         }
 
         private static void AddHttpClient(IServiceCollection services, string clientName, string apiUriEnvVarName, string apiKey)
