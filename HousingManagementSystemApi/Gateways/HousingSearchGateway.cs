@@ -10,11 +10,11 @@ namespace HousingManagementSystemApi.Gateways
     using Ardalis.GuardClauses;
     using Models;
 
-    public class AddressesHttpGateway : IAddressesGateway
+    public class HousingSearchGateway : IAddressesGateway
     {
         private readonly IHttpClientFactory httpClientFactory;
 
-        public AddressesHttpGateway(IHttpClientFactory httpClientFactory)
+        public HousingSearchGateway(IHttpClientFactory httpClientFactory)
         {
             this.httpClientFactory = httpClientFactory;
         }
