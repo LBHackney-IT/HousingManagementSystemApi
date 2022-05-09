@@ -76,10 +76,14 @@ namespace HousingManagementSystemApi
 
         private static void AddHttpClients(IServiceCollection services)
         {
-            var uri = new Uri(GetEnvironmentVariable("HOUSING_SEARCH_API_URI"));
-            var key = GetEnvironmentVariable("HOUSING_SEARCH_API_KEY");
+            AddHttpClient(services, HttpClientNames.HousingSearch, "HOUSING_SEARCH_API_URI", "HOUSING_SEARCH_API_KEY");
+        }
 
-            AddClient(services, HttpClientNames.HousingSearch, uri, key);
+        private static void AddHttpClient(IServiceCollection services, string clientName, string apiUriEnvVarName, string apiKey)
+        {
+            var uri = new Uri(GetEnvironmentVariable(apiUriEnvVarName));
+            var key = GetEnvironmentVariable(apiKey);
+            AddClient(services, clientName, uri, key);
         }
 
         private static void AddClient(IServiceCollection services, string clientName, Uri uri, string key)
