@@ -11,11 +11,11 @@ namespace HousingManagementSystemApi.Tests.GatewaysTests
     using RichardSzalay.MockHttp;
     using Xunit;
 
-    public class AddressesHttpGatewayTests
+    public class HousingSearchGatewayTests
     {
         private const string Postcode = "M3 OW";
         private Mock<IHttpClientFactory> httpClientFactory;
-        private readonly AddressesHttpGateway systemUnderTest;
+        private readonly HousingSearchGateway systemUnderTest;
 
         private string addressSearchResponse = @"{
   ""results"": {
@@ -50,7 +50,7 @@ namespace HousingManagementSystemApi.Tests.GatewaysTests
 
         private MockHttpMessageHandler mockHttp;
 
-        public AddressesHttpGatewayTests()
+        public HousingSearchGatewayTests()
         {
             mockHttp = new MockHttpMessageHandler();
 
@@ -62,7 +62,7 @@ namespace HousingManagementSystemApi.Tests.GatewaysTests
 
             httpClientFactory = new Mock<IHttpClientFactory>();
             httpClientFactory.Setup(x => x.CreateClient(It.IsAny<string>())).Returns(httpClient);
-            systemUnderTest = new AddressesHttpGateway(httpClientFactory.Object);
+            systemUnderTest = new HousingSearchGateway(httpClientFactory.Object);
         }
 
         [Theory]
