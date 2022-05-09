@@ -7,19 +7,61 @@ namespace HousingManagementSystemApi.Tests.GatewaysTests
     using System.Threading.Tasks;
     using FluentAssertions;
     using Gateways;
-    using HACT.Dtos;
     using Moq;
-    using Repositories;
+    using RichardSzalay.MockHttp;
     using Xunit;
 
     public class AddressesHttpGatewayTests
     {
+        private const string Postcode = "M3 OW";
         private Mock<IHttpClientFactory> httpClientFactory;
-        private AddressesHttpGateway systemUnderTest;
+        private readonly AddressesHttpGateway systemUnderTest;
+
+        private string addressSearchResponse = @"{
+  ""results"": {
+    ""assets"": [
+      {
+        ""id"": ""c7f39282-2505-f0fb-fbe3-d4ae3c8b7097"",
+        ""assetId"": ""100022574652"",
+        ""assetType"": ""Dwelling"",
+        ""isAssetCautionaryAlerted"": false,
+        ""assetAddress"": {
+          ""uprn"": ""100022574652"",
+          ""addressLine1"": ""97A Old Church Road"",
+          ""addressLine2"": ""Chingford"",
+          ""addressLine3"": ""LONDON"",
+          ""addressLine4"": """",
+          ""postCode"": ""E4 6ST"",
+          ""postPreamble"": """"
+        },
+        ""tenure"": {
+          ""id"": ""6af3ff4e-09de-f27d-514e-20de013b207a"",
+          ""paymentReference"": ""9174652206"",
+          ""startOfTenureDate"": ""2013-06-24"",
+          ""endOfTenureDate"": ""2015-02-01"",
+          ""type"": ""Temp Private Lt"",
+          ""isActive"": false
+        }
+      }
+    ]
+  },
+  ""total"": 1
+}";
+
+        private MockHttpMessageHandler mockHttp;
 
         public AddressesHttpGatewayTests()
         {
+            mockHttp = new MockHttpMessageHandler();
+
+            mockHttp.When($"*search/assets").WithQueryString("searchText", Postcode)
+                .Respond("application/json", addressSearchResponse);
+
+            var httpClient = mockHttp.ToHttpClient();
+            httpClient.BaseAddress = new Uri("http://localhost/");
+
             httpClientFactory = new Mock<IHttpClientFactory>();
+            httpClientFactory.Setup(x => x.CreateClient(It.IsAny<string>())).Returns(httpClient);
             systemUnderTest = new AddressesHttpGateway(httpClientFactory.Object);
         }
 
@@ -55,7 +97,7 @@ namespace HousingManagementSystemApi.Tests.GatewaysTests
             // Arrange
 
             // Act
-            Func<Task> act = async () => await systemUnderTest.SearchByPostcode("M3 OW");
+            Func<Task> act = async () => await systemUnderTest.SearchByPostcode(Postcode);
 
             // Assert
             await act.Should().NotThrowAsync();
@@ -67,12 +109,9 @@ namespace HousingManagementSystemApi.Tests.GatewaysTests
 #pragma warning restore CA1707
         {
             // Arrange
-            const string postcode = "M3 OW";
-            // addressesRepositoryMock.Setup(repository => repository.GetAddressesByPostcode(postcode))
-                // .ReturnsAsync(new[] { new PropertyAddress() });
 
             // Act
-            var results = await this.systemUnderTest.SearchByPostcode(postcode);
+            var results = await this.systemUnderTest.SearchByPostcode(Postcode);
 
             // Assert
             Assert.True(results.Any());

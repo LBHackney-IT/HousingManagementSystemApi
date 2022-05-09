@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using HACT.Dtos;
 namespace HousingManagementSystemApi.Gateways
 {
+    using Ardalis.GuardClauses;
     using Models;
 
     public class AddressesHttpGateway : IAddressesGateway
@@ -20,6 +21,8 @@ namespace HousingManagementSystemApi.Gateways
 
         public async Task<IEnumerable<PropertyAddress>> SearchByPostcode(string postcode)
         {
+            Guard.Against.NullOrWhiteSpace(postcode, nameof(postcode));
+
             var httpClient = httpClientFactory.CreateClient(HttpClientNames.HousingSearch);
             var request = new HttpRequestMessage(HttpMethod.Get,
                 $"search/assets?searchText={postcode}&pageSize=100");
