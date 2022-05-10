@@ -15,8 +15,8 @@ namespace HousingManagementSystemApi.Tests.GatewaysTests
     {
         private readonly PropertiesGateway systemUnderTest;
 
-        private const string Postcode = "E100 1QZ";
-        private string propertiesSearchResponse =
+        private const string PostcodeSingleAddress = "E100 1QZ";
+        private string propertiesSearchResponseSingleAddress =
             @"[
   {
     ""propRef"": ""100000000001"",
@@ -26,7 +26,7 @@ namespace HousingManagementSystemApi.Tests.GatewaysTests
 ]";
 
         private const string PostcodeMultipleAddresses = "E100 1QQ";
-        private string propertiesSearchResponse2 =
+        private string PropertiesSearchResponseMultipleAddresses =
             @"[
   {
     ""propRef"": ""100000000001"",
@@ -46,8 +46,8 @@ namespace HousingManagementSystemApi.Tests.GatewaysTests
         {
             mockHttp = new MockHttpMessageHandler();
 
-            mockHttp.When($"*properties").WithQueryString("postcode", Postcode)
-                .Respond("application/json", propertiesSearchResponse);
+            mockHttp.When($"*properties").WithQueryString("postcode", PostcodeSingleAddress)
+                .Respond("application/json", propertiesSearchResponseSingleAddress);
 
             var httpClient = mockHttp.ToHttpClient();
             httpClient.BaseAddress = new Uri("http://localhost/");
@@ -89,7 +89,7 @@ namespace HousingManagementSystemApi.Tests.GatewaysTests
             // Arrange
 
             // Act
-            Func<Task> act = async () => await systemUnderTest.SearchByPostcode(Postcode);
+            Func<Task> act = async () => await systemUnderTest.SearchByPostcode(PostcodeSingleAddress);
 
             // Assert
             await act.Should().NotThrowAsync();
@@ -103,7 +103,7 @@ namespace HousingManagementSystemApi.Tests.GatewaysTests
             // Arrange
 
             // Act
-            var results = await systemUnderTest.SearchByPostcode(Postcode);
+            var results = await systemUnderTest.SearchByPostcode(PostcodeSingleAddress);
 
             // Assert
             Assert.True(results.Any());
@@ -131,7 +131,7 @@ namespace HousingManagementSystemApi.Tests.GatewaysTests
             // Arrange
 
             // Act
-            var results = await systemUnderTest.SearchByPostcode(Postcode);
+            var results = await systemUnderTest.SearchByPostcode(PostcodeSingleAddress);
 
             // Assert
             Assert.Single(results);
@@ -144,7 +144,7 @@ namespace HousingManagementSystemApi.Tests.GatewaysTests
         {
             // Arrange
             mockHttp.When($"*properties").WithQueryString("postcode", PostcodeMultipleAddresses)
-                .Respond("application/json", propertiesSearchResponse2);
+                .Respond("application/json", PropertiesSearchResponseMultipleAddresses);
 
             // Act
             var results = await systemUnderTest.SearchByPostcode(PostcodeMultipleAddresses);
