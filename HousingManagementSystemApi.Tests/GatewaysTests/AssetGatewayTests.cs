@@ -18,7 +18,11 @@ namespace HousingManagementSystemApi.Tests.GatewaysTests
         private MockHttpMessageHandler mockHttp;
 
         private string assetResponse =
-            "{\"id\":\"c7f39282-2505-f0fb-fbe3-d4ae3c8b7097\",\"assetId\":\"AssetId\",\"assetType\":\"Dwelling\",\"rootAsset\":\"ROOT\",\"parentAssetIds\":\"ROOT\",\"assetLocation\":{\"floorNo\":\"\",\"totalBlockFloors\":0,\"parentAssets\":[]},\"assetAddress\":{\"uprn\":\"100022574652\",\"addressLine1\":\"97A Old Church Road\",\"addressLine2\":\"Chingford\",\"addressLine3\":\"LONDON\",\"addressLine4\":\"\",\"postCode\":\"E4 6ST\",\"postPreamble\":\"\"},\"assetManagement\":{\"agent\":\"Homefinders\",\"areaOfficeName\":null,\"isCouncilProperty\":false,\"managingOrganisation\":\"London Borough of Hackney\",\"managingOrganisationId\":\"c01e3146-e630-c2cd-e709-18ef57bf3724\",\"owner\":\"\",\"isTMOManaged\":false,\"propertyOccupiedStatus\":\"VR\",\"isNoRepairsMaintenance\":false},\"assetCharacteristics\":{\"numberOfBedrooms\":3,\"numberOfLifts\":0,\"numberOfLivingRooms\":0,\"windowType\":\"\",\"yearConstructed\":\"0\"},\"tenure\":{\"id\":\"6af3ff4e-09de-f27d-514e-20de013b207a\",\"paymentReference\":\"9174652206\",\"type\":\"Temp Private Lt\",\"startOfTenureDate\":\"2013-06-24T00:00:00\",\"endOfTenureDate\":\"2015-02-01T00:00:00\",\"isActive\":false}}";
+            "{\"id\":\"c7f39282-2505-f0fb-fbe3-d4ae3c8b7097\"," +
+            "\"assetId\":\"AssetId\"," +
+            "\"assetType\":\"Dwelling\"," +
+            "\"assetAddress\":{\"uprn\":\"100022574692\",\"addressLine1\":\"9 Old Church Road\",\"addressLine2\":\"Chingford\",\"addressLine3\":\"LONDON\",\"addressLine4\":\"\",\"postCode\":\"E4 6ST\",\"postPreamble\":\"\"}," +
+            "\"tenure\":{\"id\":\"6af3ff4e-09de-f27d-514e-20de013b207a\"}}";
 
 
         public AssetGatewayTests()
