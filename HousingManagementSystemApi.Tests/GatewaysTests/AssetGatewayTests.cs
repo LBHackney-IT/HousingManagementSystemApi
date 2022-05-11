@@ -76,7 +76,7 @@ namespace HousingManagementSystemApi.Tests.GatewaysTests
 
         [Fact]
 #pragma warning disable CA1707
-        public async void GivenAAssetId_WhenRetrievingAnAsset_ThenAddressesAreRetrievedFromApi()
+        public async void GivenAnAssetId_WhenRetrievingAnAsset_ThenAddressesAreRetrievedFromApi()
 #pragma warning restore CA1707
         {
             // Arrange
