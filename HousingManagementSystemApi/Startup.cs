@@ -8,15 +8,20 @@ using Microsoft.OpenApi.Models;
 
 namespace HousingManagementSystemApi
 {
+    using System.Collections.Generic;
     using System.Net.Http;
     using Gateways;
+    using Hackney.Shared.Asset.Domain;
     using HousingRepairsOnline.Authentication.DependencyInjection;
     using UseCases;
 
     public class Startup
     {
         private const string HousingManagementSystemApiIssuerId = "Housing Management System Api";
-
+        public static IEnumerable<AssetType> EligibleAssetTypes = new[]
+        {
+            AssetType.Flat, AssetType.House, AssetType.Dwelling,
+        };
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
@@ -30,10 +35,19 @@ namespace HousingManagementSystemApi
             services.AddHousingRepairsOnlineAuthentication(HousingManagementSystemApiIssuerId);
 
             services.AddControllers();
-            services.AddTransient<IRetrieveAddressesUseCase, RetrieveAddressesUseCase>();
+
+
+            services.AddTransient<IRetrieveAddressesUseCase, RetrieveAddressesUseCase>(s =>
+            {
+                var assetGateway = s.GetService<IAssetGateway>();
+                var addressesGateway = s.GetService<IAddressesGateway>();
+                var eligibleAssets = EligibleAssetTypes;
+                return new RetrieveAddressesUseCase(addressesGateway, assetGateway, eligibleAssets);
+            });
 
             AddHttpClients(services);
 
+            services.AddTransient<IAssetGateway, AssetGateway>();
             // services.AddTransient<IAddressesGateway, HousingSearchGateway>();
             services.AddTransient<IAddressesGateway, PropertiesGateway>();
 
@@ -77,8 +91,9 @@ namespace HousingManagementSystemApi
 
         private static void AddHttpClients(IServiceCollection services)
         {
-            AddHttpClient(services, HttpClientNames.HousingSearch, "HOUSING_SEARCH_API_URI", "HOUSING_SEARCH_API_KEY");
             AddHttpClient(services, HttpClientNames.Properties, "PROPERTIES_API_URI", "PROPERTIES_API_KEY");
+            AddHttpClient(services, HttpClientNames.Asset, "HOUSING_ASSET_API_URI", "HOUSING_ASSET_API_KEY");
+            AddHttpClient(services, HttpClientNames.HousingSearch, "HOUSING_SEARCH_API_URI", "HOUSING_SEARCH_API_KEY");
         }
 
         private static void AddHttpClient(IServiceCollection services, string clientName, string apiUriEnvVarName, string apiKey)
