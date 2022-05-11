@@ -22,6 +22,7 @@ namespace HousingManagementSystemApi
         {
             AssetType.Flat, AssetType.House, AssetType.Dwelling,
         };
+
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
@@ -91,9 +92,9 @@ namespace HousingManagementSystemApi
 
         private static void AddHttpClients(IServiceCollection services)
         {
+            AddHttpClient(services, HttpClientNames.HousingSearch, "HOUSING_SEARCH_API_URI", "HOUSING_SEARCH_API_KEY");
             AddHttpClient(services, HttpClientNames.Properties, "PROPERTIES_API_URI", "PROPERTIES_API_KEY");
             AddHttpClient(services, HttpClientNames.Asset, "HOUSING_ASSET_API_URI", "HOUSING_ASSET_API_KEY");
-            AddHttpClient(services, HttpClientNames.HousingSearch, "HOUSING_SEARCH_API_URI", "HOUSING_SEARCH_API_KEY");
         }
 
         private static void AddHttpClient(IServiceCollection services, string clientName, string apiUriEnvVarName, string apiKey)
