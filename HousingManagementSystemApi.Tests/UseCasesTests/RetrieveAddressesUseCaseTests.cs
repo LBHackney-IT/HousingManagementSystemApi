@@ -45,10 +45,10 @@ namespace HousingManagementSystemApi.Tests
         {
             const string TestPostcode = "postcode";
             retrieveAddressesGateway.Setup(x => x.SearchByPostcode(TestPostcode))
-                .ReturnsAsync(new PropertyAddress[] { new() { PostalCode = TestPostcode, Reference = new Reference{ID = "assetId"}} });
+                .ReturnsAsync(new PropertyAddress[] { new() { PostalCode = TestPostcode, Reference = new Reference { ID = "assetId" } } });
 
             retrieveAssetGateway.Setup(x => x.RetrieveAsset("assetId"))
-                .ReturnsAsync(new AssetResponseObject { AssetType = AssetType.Dwelling});
+                .ReturnsAsync(new AssetResponseObject { AssetType = AssetType.Dwelling });
 
             var result = await retrieveAddressesUseCase.Execute(TestPostcode);
             result.First().PostalCode.Should().Be(TestPostcode);
@@ -59,10 +59,10 @@ namespace HousingManagementSystemApi.Tests
         {
             const string TestPostcode = "postcode";
             retrieveAddressesGateway.Setup(x => x.SearchByPostcode(TestPostcode))
-                .ReturnsAsync(new PropertyAddress[] { new() { PostalCode = TestPostcode, Reference = new Reference{ID = "assetId"}} });
+                .ReturnsAsync(new PropertyAddress[] { new() { PostalCode = TestPostcode, Reference = new Reference { ID = "assetId" } } });
 
             retrieveAssetGateway.Setup(x => x.RetrieveAsset("assetId"))
-                .ReturnsAsync(new AssetResponseObject { AssetType = AssetType.Concierge});
+                .ReturnsAsync(new AssetResponseObject { AssetType = AssetType.Concierge });
 
             var result = await retrieveAddressesUseCase.Execute(TestPostcode);
             result.Should().BeEmpty();
