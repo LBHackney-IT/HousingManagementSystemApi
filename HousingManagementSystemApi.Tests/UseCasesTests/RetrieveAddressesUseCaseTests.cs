@@ -55,7 +55,7 @@ namespace HousingManagementSystemApi.Tests
         }
 
         [Fact]
-        public async Task GivenAPostcode_WhenAnAddressExistsWithAIneligibleAssetType_ThenAPropertyIsNotReturned()
+        public async Task GivenAPostcode_WhenAnAddressExistsWithAnIneligibleAssetType_ThenAPropertyIsNotReturned()
         {
             const string TestPostcode = "postcode";
             retrieveAddressesGateway.Setup(x => x.SearchByPostcode(TestPostcode))
