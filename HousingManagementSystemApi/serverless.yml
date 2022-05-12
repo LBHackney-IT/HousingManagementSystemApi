@@ -35,6 +35,8 @@ functions:
       HOUSING_SEARCH_API_KEY:  ${ssm:/HousingManagementSystemApi/${self:provider.stage}/housing-search-api-key}
       PROPERTIES_API_URI: ${ssm:/HousingManagementSystemApi/${self:provider.stage}/properties-api-uri}
       PROPERTIES_API_KEY: ${ssm:/HousingManagementSystemApi/${self:provider.stage}/properties-api-key}
+      HOUSING_ASSET_API_URI: ${ssm:/HousingManagementSystemApi/${self:provider.stage}/housing-asset-api-uri}
+      HOUSING_ASSET_API_KEY: ${ssm:/HousingManagementSystemApi/${self:provider.stage}/housing-assset-api-key}
     events:
       - http:
           path: /{proxy+}
