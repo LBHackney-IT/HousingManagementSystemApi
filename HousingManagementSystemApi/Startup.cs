@@ -20,7 +20,7 @@ namespace HousingManagementSystemApi
         private const string HousingManagementSystemApiIssuerId = "Housing Management System Api";
         public static IEnumerable<AssetType> EligibleAssetTypes = new[]
         {
-            AssetType.Flat, AssetType.House, AssetType.Dwelling,
+            AssetType.Flat, AssetType.House, AssetType.Dwelling, AssetType.StudioFlat, AssetType.SelfContainedBedsit
         };
 
         public Startup(IConfiguration configuration)
