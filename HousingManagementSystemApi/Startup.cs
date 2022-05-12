@@ -12,6 +12,7 @@ namespace HousingManagementSystemApi
     using System.Net.Http;
     using Gateways;
     using Hackney.Shared.Asset.Domain;
+    using Hackney.Shared.Tenure.Domain;
     using HousingRepairsOnline.Authentication.DependencyInjection;
     using UseCases;
 
@@ -21,6 +22,11 @@ namespace HousingManagementSystemApi
         public static IEnumerable<AssetType> EligibleAssetTypes = new[]
         {
             AssetType.Flat, AssetType.House, AssetType.Dwelling, AssetType.StudioFlat, AssetType.SelfContainedBedsit
+        };
+
+        public static readonly IEnumerable<TenureType> EligibleTenureTypes = new List<TenureType>
+        {
+            TenureTypes.Introductory
         };
 
         public Startup(IConfiguration configuration)
@@ -40,17 +46,20 @@ namespace HousingManagementSystemApi
 
             services.AddTransient<IRetrieveAddressesUseCase, RetrieveAddressesUseCase>(s =>
             {
+                var tenureGateway = s.GetService<ITenureGateway>();
                 var assetGateway = s.GetService<IAssetGateway>();
                 var addressesGateway = s.GetService<IAddressesGateway>();
                 var eligibleAssets = EligibleAssetTypes;
-                return new RetrieveAddressesUseCase(addressesGateway, assetGateway, eligibleAssets);
+                var eligibleTenureTypes = EligibleTenureTypes;
+                return new RetrieveAddressesUseCase(addressesGateway, assetGateway, eligibleAssets, tenureGateway, eligibleTenureTypes);
             });
 
             AddHttpClients(services);
 
+            services.AddTransient<ITenureGateway, TenureGateway>();
             services.AddTransient<IAssetGateway, AssetGateway>();
-            // services.AddTransient<IAddressesGateway, HousingSearchGateway>();
             services.AddTransient<IAddressesGateway, PropertiesGateway>();
+            // services.AddTransient<IAddressesGateway, HousingSearchGateway>();
 
             services.AddSwaggerGen(c =>
             {
@@ -95,6 +104,7 @@ namespace HousingManagementSystemApi
             AddHttpClient(services, HttpClientNames.HousingSearch, "HOUSING_SEARCH_API_URI", "HOUSING_SEARCH_API_KEY");
             AddHttpClient(services, HttpClientNames.Properties, "PROPERTIES_API_URI", "PROPERTIES_API_KEY");
             AddHttpClient(services, HttpClientNames.Asset, "HOUSING_ASSET_API_URI", "HOUSING_ASSET_API_KEY");
+            AddHttpClient(services, HttpClientNames.TenureInformation, "TENURE_INFORMATION_API_URI", "TENURE_INFORMATION_API_KEY");
         }
 
         private static void AddHttpClient(IServiceCollection services, string clientName, string apiUriEnvVarName, string apiKey)
