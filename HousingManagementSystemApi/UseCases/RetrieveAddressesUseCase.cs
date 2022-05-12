@@ -7,22 +7,25 @@ using HousingManagementSystemApi.Gateways;
 namespace HousingManagementSystemApi.UseCases
 {
     using System.Linq;
-    using Dapper;
-    using Hackney.Shared.Asset.Boundary.Response;
     using Hackney.Shared.Asset.Domain;
-    using Microsoft.AspNetCore.Mvc;
+    using Hackney.Shared.Tenure.Domain;
 
     public class RetrieveAddressesUseCase : IRetrieveAddressesUseCase
     {
         private readonly IAddressesGateway addressesGateway;
         private readonly IAssetGateway assetGateway;
         private readonly IEnumerable<AssetType> assetTypes;
+        private readonly ITenureGateway tenureGateway;
 
-        public RetrieveAddressesUseCase(IAddressesGateway addressesGateway, IAssetGateway assetGateway, IEnumerable<AssetType> assetTypes)
+        private IEnumerable<string> EligibleTenureCodes { get; }
+        public RetrieveAddressesUseCase(IAddressesGateway addressesGateway, IAssetGateway assetGateway,
+            IEnumerable<AssetType> assetTypes, ITenureGateway tenureGateway, IEnumerable<TenureType> eligibleTenureTypes)
         {
             this.addressesGateway = addressesGateway;
             this.assetGateway = assetGateway;
             this.assetTypes = assetTypes;
+            this.tenureGateway = tenureGateway;
+            this.EligibleTenureCodes = eligibleTenureTypes.Select(x => x.Code);
         }
 
         public async Task<IEnumerable<PropertyAddress>> Execute(string postcode)
@@ -39,9 +42,16 @@ namespace HousingManagementSystemApi.UseCases
                 var asset = await assetGateway.RetrieveAsset(property.Reference.ID);
                 if (assetTypes.Contains(asset.AssetType))
                 {
-                    filteredAssets.Add(property);
+                    var tenureInformation = await this.tenureGateway.RetrieveTenureType(asset.Id);
+                    var tenureTypeCode = tenureInformation.TenureType.Code;
+
+                    if (EligibleTenureCodes.Contains(tenureTypeCode))
+                    {
+                        filteredAssets.Add(property);
+                    }
                 }
             }
+
             return filteredAssets;
         }
     }
