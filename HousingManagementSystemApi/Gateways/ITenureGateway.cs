@@ -7,6 +7,6 @@ namespace HousingManagementSystemApi.Gateways
 
     public interface ITenureGateway
     {
-        Task<TenureInformation> RetrieveTenureType(Guid id);
+        Task<TenureInformation> RetrieveTenureType(string id);
     }
 }
