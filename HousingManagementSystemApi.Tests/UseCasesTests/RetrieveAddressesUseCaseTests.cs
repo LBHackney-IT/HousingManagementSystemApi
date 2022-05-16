@@ -60,9 +60,9 @@ namespace HousingManagementSystemApi.Tests
                 .ReturnsAsync(new PropertyAddress[] { new() { PostalCode = TestPostcode, Reference = new Reference { ID = "assetId" } } });
 
             retrieveAssetGateway.Setup(x => x.RetrieveAsset("assetId"))
-                .ReturnsAsync(new AssetResponseObject { AssetType = AssetType.Dwelling });
+                .ReturnsAsync(new AssetResponseObject { AssetType = AssetType.Dwelling, Tenure = new AssetTenureResponseObject { Id = "Id" } });
 
-            this.tenureGateway.Setup(x => x.RetrieveTenureType(new Guid()))
+            tenureGateway.Setup(x => x.RetrieveTenureType("Id"))
                 .ReturnsAsync(new TenureInformation { TenureType = TenureTypes.Secure });
 
             var result = await retrieveAddressesUseCase.Execute(TestPostcode);
@@ -79,7 +79,7 @@ namespace HousingManagementSystemApi.Tests
             retrieveAssetGateway.Setup(x => x.RetrieveAsset("assetId"))
                 .ReturnsAsync(new AssetResponseObject { AssetType = AssetType.Concierge });
 
-            this.tenureGateway.Setup(x => x.RetrieveTenureType(new Guid()))
+            tenureGateway.Setup(x => x.RetrieveTenureType("Id"))
                 .ReturnsAsync(new TenureInformation { TenureType = TenureTypes.Secure });
 
             var result = await retrieveAddressesUseCase.Execute(TestPostcode);

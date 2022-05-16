@@ -17,11 +17,11 @@ public class TenureGateway : ITenureGateway
         this.httpClientFactory = httpClientFactory;
     }
 
-    public async Task<TenureInformation> RetrieveTenureType(Guid id)
+    public async Task<TenureInformation> RetrieveTenureType(string id)
     {
-        Guard.Against.NullOrWhiteSpace(id.ToString(), nameof(id));
+        Guard.Against.NullOrWhiteSpace(id, nameof(id));
 
-        var httpClient = this.httpClientFactory.CreateClient(HttpClientNames.TenureInformation);
+        var httpClient = httpClientFactory.CreateClient(HttpClientNames.TenureInformation);
         var request = new HttpRequestMessage(HttpMethod.Get,
             $"tenures/{id}");
         var response = await httpClient.SendAsync(request);
