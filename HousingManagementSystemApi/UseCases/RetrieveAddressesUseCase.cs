@@ -43,7 +43,7 @@ namespace HousingManagementSystemApi.UseCases
                 if (assetTypes.Contains(asset.AssetType))
                 {
                     var tenureInformation = await tenureGateway.RetrieveTenureType(asset?.Tenure?.Id);
-                    var tenureTypeCode = tenureInformation.TenureType.Code;
+                    var tenureTypeCode = tenureInformation?.TenureType?.Code;
 
                     if (EligibleTenureCodes.Contains(tenureTypeCode))
                     {
