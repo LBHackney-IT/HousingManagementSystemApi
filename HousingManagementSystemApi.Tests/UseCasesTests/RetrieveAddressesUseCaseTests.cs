@@ -7,28 +7,40 @@ using HousingManagementSystemApi.Gateways;
 using HousingManagementSystemApi.UseCases;
 using Moq;
 using Xunit;
+
 namespace HousingManagementSystemApi.Tests
 {
     using System.Collections.Generic;
     using Hackney.Shared.Asset.Boundary.Response;
     using Hackney.Shared.Asset.Domain;
+    using Hackney.Shared.Tenure.Domain;
 
     public class RetrieveAddressesUseCaseTests
     {
         private readonly Mock<IAddressesGateway> retrieveAddressesGateway;
         private readonly Mock<IAssetGateway> retrieveAssetGateway;
+        private readonly Mock<ITenureGateway> tenureGateway;
         private readonly RetrieveAddressesUseCase retrieveAddressesUseCase;
 
         public static IEnumerable<AssetType> EligibleAssetTypes = new[]
         {
             AssetType.Flat, AssetType.House, AssetType.Dwelling,
         };
+
+        private readonly List<TenureType> eligibleAssetTypes = new List<TenureType>
+        {
+            TenureTypes.Introductory,
+            TenureTypes.Secure,
+            TenureTypes.Freehold
+        };
+
         public RetrieveAddressesUseCaseTests()
         {
             retrieveAddressesGateway = new Mock<IAddressesGateway>();
             retrieveAssetGateway = new Mock<IAssetGateway>();
-            retrieveAddressesUseCase = new RetrieveAddressesUseCase(retrieveAddressesGateway.Object, retrieveAssetGateway.Object, EligibleAssetTypes);
-
+            tenureGateway = new Mock<ITenureGateway>();
+            retrieveAddressesUseCase = new RetrieveAddressesUseCase(retrieveAddressesGateway.Object,
+                retrieveAssetGateway.Object, EligibleAssetTypes, tenureGateway.Object, eligibleAssetTypes);
         }
 
         [Fact]
@@ -41,14 +53,17 @@ namespace HousingManagementSystemApi.Tests
         }
 
         [Fact]
-        public async Task GivenAPostcode_WhenAnAddressExistsWithAnEligibleAssetType_ThenThePropertyIsReturned()
+        public async Task GivenAPostcode_WhenAnAddressExistsWithAnEligibleAssetAndTenureType_ThenThePropertyIsReturned()
         {
             const string TestPostcode = "postcode";
             retrieveAddressesGateway.Setup(x => x.SearchByPostcode(TestPostcode))
                 .ReturnsAsync(new PropertyAddress[] { new() { PostalCode = TestPostcode, Reference = new Reference { ID = "assetId" } } });
 
             retrieveAssetGateway.Setup(x => x.RetrieveAsset("assetId"))
-                .ReturnsAsync(new AssetResponseObject { AssetType = AssetType.Dwelling });
+                .ReturnsAsync(new AssetResponseObject { AssetType = AssetType.Dwelling, Tenure = new AssetTenureResponseObject { Id = "Id" } });
+
+            tenureGateway.Setup(x => x.RetrieveTenureType("Id"))
+                .ReturnsAsync(new TenureInformation { TenureType = TenureTypes.Secure });
 
             var result = await retrieveAddressesUseCase.Execute(TestPostcode);
             result.First().PostalCode.Should().Be(TestPostcode);
@@ -63,6 +78,27 @@ namespace HousingManagementSystemApi.Tests
 
             retrieveAssetGateway.Setup(x => x.RetrieveAsset("assetId"))
                 .ReturnsAsync(new AssetResponseObject { AssetType = AssetType.Concierge });
+
+            tenureGateway.Setup(x => x.RetrieveTenureType("Id"))
+                .ReturnsAsync(new TenureInformation { TenureType = TenureTypes.Secure });
+
+            var result = await retrieveAddressesUseCase.Execute(TestPostcode);
+            result.Should().BeEmpty();
+        }
+
+        [Fact]
+        public async Task GivenAPostcode_WhenAnAddressExistsWithAnIneligibleTenureType_ThenAPropertyIsNotReturned()
+        {
+            const string TestPostcode = "postcode";
+            var ineligibleTenureType = TenureTypes.CommercialLet;
+            retrieveAddressesGateway.Setup(x => x.SearchByPostcode(TestPostcode))
+                .ReturnsAsync(new PropertyAddress[] { new() { PostalCode = TestPostcode, Reference = new Reference { ID = "assetId" } } });
+
+            retrieveAssetGateway.Setup(x => x.RetrieveAsset("assetId"))
+                .ReturnsAsync(new AssetResponseObject { AssetType = AssetType.Concierge });
+
+            tenureGateway.Setup(x => x.RetrieveTenureType("Id"))
+                .ReturnsAsync(new TenureInformation { TenureType = ineligibleTenureType });
 
             var result = await retrieveAddressesUseCase.Execute(TestPostcode);
             result.Should().BeEmpty();
@@ -83,5 +119,4 @@ namespace HousingManagementSystemApi.Tests
             retrieveAddressesGateway.Verify(x => x.SearchByPostcode(TestPostcode), Times.Never);
         }
     }
-
 }
