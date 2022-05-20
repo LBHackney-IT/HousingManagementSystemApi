@@ -37,7 +37,8 @@ namespace HousingManagementSystemApi.UseCases
                 return new List<PropertyAddress>();
             var result = await addressesGateway.SearchByPostcode(postcode);
             var filteredAssets = new List<PropertyAddress>();
-            foreach (var property in result)
+
+            await Parallel.ForEachAsync(result, async (property, _) =>
             {
                 var asset = await assetGateway.RetrieveAsset(property.Reference.ID);
                 if (assetTypes.Contains(asset.AssetType))
@@ -50,7 +51,7 @@ namespace HousingManagementSystemApi.UseCases
                         filteredAssets.Add(property);
                     }
                 }
-            }
+            });
 
             return filteredAssets;
         }
