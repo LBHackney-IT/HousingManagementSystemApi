@@ -26,7 +26,8 @@ namespace HousingManagementSystemApi
 
         public static readonly IEnumerable<TenureType> EligibleTenureTypes = new List<TenureType>
         {
-            TenureTypes.Introductory
+            TenureTypes.Introductory,
+            TenureTypes.Secure
         };
 
         public Startup(IConfiguration configuration)
