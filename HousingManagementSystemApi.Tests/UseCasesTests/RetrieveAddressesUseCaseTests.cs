@@ -115,11 +115,12 @@ namespace HousingManagementSystemApi.Tests
         }
 
         [Fact]
-        public async void GivenEmptyPostcode_WhenExecute_SearchByPostcodeIsNotCalled()
+        public async void GivenEmptyPostcode_WhenExecute_ThrowsNullException()
         {
             const string TestPostcode = "";
-            await retrieveAddressesUseCase.Execute(postCode: TestPostcode);
-            retrieveAddressesGateway.Verify(x => x.SearchByPostcode(TestPostcode), Times.Never);
+
+            Func<Task> act = async () => await retrieveAddressesUseCase.Execute(postCode: TestPostcode);
+            await act.Should().ThrowAsync<ArgumentNullException>();
         }
     }
 }
