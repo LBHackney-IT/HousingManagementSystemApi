@@ -1,9 +1,9 @@
-using System.Diagnostics.CodeAnalysis;
 using Amazon.Lambda.AspNetCoreServer;
 using Microsoft.AspNetCore.Hosting;
 using Serilog;
 using Serilog.Formatting.Compact;
 using Serilog.Events;
+using System.Diagnostics.CodeAnalysis;
 
 namespace HousingManagementSystemApi
 {
