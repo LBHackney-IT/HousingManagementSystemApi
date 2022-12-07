@@ -10,10 +10,12 @@ namespace HousingManagementSystemApi
 {
     using System.Collections.Generic;
     using System.Net.Http;
+    using Castle.Core.Logging;
     using Gateways;
     using Hackney.Shared.Asset.Domain;
     using Hackney.Shared.Tenure.Domain;
     using HousingRepairsOnline.Authentication.DependencyInjection;
+    using Microsoft.Extensions.Logging.Abstractions;
     using UseCases;
 
     public class Startup
@@ -52,7 +54,7 @@ namespace HousingManagementSystemApi
                 var addressesGateway = s.GetService<IAddressesGateway>();
                 var eligibleAssets = EligibleAssetTypes;
                 var eligibleTenureTypes = EligibleTenureTypes;
-                return new RetrieveAddressesUseCase(addressesGateway, assetGateway, eligibleAssets, tenureGateway, eligibleTenureTypes);
+                return new RetrieveAddressesUseCase(addressesGateway, assetGateway, eligibleAssets, tenureGateway, eligibleTenureTypes, new NullLogger<RetrieveAddressesUseCase>());
             });
 
             AddHttpClients(services);

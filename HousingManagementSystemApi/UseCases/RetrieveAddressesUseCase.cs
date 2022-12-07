@@ -39,25 +39,25 @@ namespace HousingManagementSystemApi.UseCases
             _logger = logger;
         }
 
-        public async Task<IEnumerable<PropertyAddress>> Execute(string postcode)
+        public async Task<IEnumerable<PropertyAddress>> Execute(string postCode)
         {
-            _logger.LogInformation("Calling RetrieveAddressesUseCase for {PostCode}", postcode);
+            _logger.LogInformation("Calling RetrieveAddressesUseCase for {PostCode}", postCode);
 
-            if (string.IsNullOrWhiteSpace(postcode))
+            if (string.IsNullOrWhiteSpace(postCode))
             {
-                _logger.LogInformation("The value of {PostCode} was null or whitespace. Throwing Exception", postcode);
-                throw new ArgumentNullException(nameof(postcode));
+                _logger.LogInformation("The value of {PostCode} was null or whitespace. Throwing Exception", postCode);
+                throw new ArgumentNullException(nameof(postCode));
             }
 
-            var result = await _addressesGateway.SearchByPostcode(postcode);
+            var result = await _addressesGateway.SearchByPostcode(postCode);
 
-            _logger.LogInformation("Retrieved {Count} results from addressGateway for {PostCode}", result.Count(), postcode);
+            _logger.LogInformation("Retrieved {Count} results from addressGateway for {PostCode}", result.Count(), postCode);
 
             var filteredAssets = new List<PropertyAddress>();
 
             await Parallel.ForEachAsync(result, async (property, _) =>
             {
-                var filteredAsset = await FilterAsset(property);
+                var filteredAsset = await FilterAsset(property, postCode);
 
                 if (filteredAsset != null)
                 {
@@ -65,30 +65,30 @@ namespace HousingManagementSystemApi.UseCases
                 }
             });
 
-            _logger.LogInformation("Returning {Count} filteredAssets from RetrieveAddressesUseCase for {PostCode}", filteredAssets.Count(), postcode);
+            _logger.LogInformation("Returning {Count} filteredAssets from RetrieveAddressesUseCase for {PostCode}", filteredAssets.Count(), postCode);
 
             return filteredAssets;
         }
 
-        private async Task<PropertyAddress> FilterAsset(PropertyAddress property)
+        private async Task<PropertyAddress> FilterAsset(PropertyAddress property, string postCode)
         {
             var asset = await _assetGateway.RetrieveAsset(property.Reference.ID);
 
             if (asset == null)
             {
-                _logger.LogInformation("The asset with {Id} returned null for postCode {PostCode}. Skipping iteration", property.Reference.ID, postcode);
+                _logger.LogInformation("The asset with {Id} returned null for postCode {PostCode}. Skipping iteration", property.Reference.ID, postCode);
                 return null;
             }
 
             if (!_assetTypes.Contains(asset.AssetType))
             {
-                _logger.LogInformation("The asset with {Id} was skipped because the assetType was {AssetType} for postCode {PostCode}. Skipping iteration", property.Reference.ID, asset.AssetType, postcode);
+                _logger.LogInformation("The asset with {Id} was skipped because the assetType was {AssetType} for postCode {PostCode}. Skipping iteration", property.Reference.ID, asset.AssetType, postCode);
                 return null;
             }
 
             if (asset?.Tenure?.Id == null)
             {
-                _logger.LogInformation("TenureId was null for postCode {PostCode}. Skipping iteration", postcode);
+                _logger.LogInformation("TenureId was null for postCode {PostCode}. Skipping iteration", postCode);
                 return null;
             }
 

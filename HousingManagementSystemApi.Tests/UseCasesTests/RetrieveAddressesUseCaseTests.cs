@@ -11,9 +11,11 @@ using Xunit;
 namespace HousingManagementSystemApi.Tests
 {
     using System.Collections.Generic;
+    using Castle.Core.Logging;
     using Hackney.Shared.Asset.Boundary.Response;
     using Hackney.Shared.Asset.Domain;
     using Hackney.Shared.Tenure.Domain;
+    using Microsoft.Extensions.Logging.Abstractions;
 
     public class RetrieveAddressesUseCaseTests
     {
@@ -40,7 +42,8 @@ namespace HousingManagementSystemApi.Tests
             retrieveAssetGateway = new Mock<IAssetGateway>();
             tenureGateway = new Mock<ITenureGateway>();
             retrieveAddressesUseCase = new RetrieveAddressesUseCase(retrieveAddressesGateway.Object,
-                retrieveAssetGateway.Object, EligibleAssetTypes, tenureGateway.Object, eligibleAssetTypes);
+                retrieveAssetGateway.Object, EligibleAssetTypes, tenureGateway.Object, eligibleAssetTypes,
+                new NullLogger<RetrieveAddressesUseCase>());
         }
 
         [Fact]
@@ -115,7 +118,7 @@ namespace HousingManagementSystemApi.Tests
         public async void GivenEmptyPostcode_WhenExecute_SearchByPostcodeIsNotCalled()
         {
             const string TestPostcode = "";
-            await retrieveAddressesUseCase.Execute(postcode: TestPostcode);
+            await retrieveAddressesUseCase.Execute(postCode: TestPostcode);
             retrieveAddressesGateway.Verify(x => x.SearchByPostcode(TestPostcode), Times.Never);
         }
     }
