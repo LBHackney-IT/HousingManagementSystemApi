@@ -86,9 +86,9 @@ namespace HousingManagementSystemApi.UseCases
                 return null;
             }
 
-            if (asset?.Tenure?.Id == null)
+            if (asset.Tenure == null || asset.Tenure.Id == null)
             {
-                _logger.LogInformation("TenureId was null for postCode {PostCode}. Skipping iteration", postCode);
+                _logger.LogInformation("Tenure or TenureId was null for postCode {PostCode}. Skipping iteration", postCode);
                 return null;
             }
 

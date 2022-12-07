@@ -108,6 +108,24 @@ namespace HousingManagementSystemApi.Tests
         }
 
         [Fact]
+        public async Task GivenAPostcode_WhenAnAddressExistsWithANullTenure_ThenAPropertyIsNotReturned()
+        {
+            const string TestPostcode = "postcode";
+            var eligibleTenureType = TenureTypes.Secure;
+            retrieveAddressesGateway.Setup(x => x.SearchByPostcode(TestPostcode))
+                .ReturnsAsync(new PropertyAddress[] { new() { PostalCode = TestPostcode, Reference = new Reference { ID = "assetId" } } });
+
+            retrieveAssetGateway.Setup(x => x.RetrieveAsset("assetId"))
+                .ReturnsAsync(new AssetResponseObject { AssetType = AssetType.Dwelling });
+
+            tenureGateway.Setup(x => x.RetrieveTenureType("Id"))
+                .ReturnsAsync((TenureInformation)null);
+
+            var result = await retrieveAddressesUseCase.Execute(TestPostcode);
+            result.Should().BeEmpty();
+        }
+
+        [Fact]
         public async void GivenNullPostcode_WhenExecute_ThrowsNullException()
         {
             Func<Task> act = async () => await retrieveAddressesUseCase.Execute(null);
