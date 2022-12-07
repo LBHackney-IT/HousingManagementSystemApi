@@ -43,12 +43,15 @@ namespace HousingManagementSystemApi.UseCases
                 var asset = await assetGateway.RetrieveAsset(property.Reference.ID);
                 if (assetTypes.Contains(asset.AssetType))
                 {
-                    var tenureInformation = await tenureGateway.RetrieveTenureType(asset?.Tenure?.Id);
-                    var tenureTypeCode = tenureInformation?.TenureType?.Code;
-
-                    if (EligibleTenureCodes.Contains(tenureTypeCode))
+                    if (asset.Tenure != null && asset.Tenure.Id != null)
                     {
-                        filteredAssets.Add(property);
+                        var tenureInformation = await tenureGateway.RetrieveTenureType(asset?.Tenure?.Id);
+                        var tenureTypeCode = tenureInformation?.TenureType?.Code;
+
+                        if (EligibleTenureCodes.Contains(tenureTypeCode))
+                        {
+                            filteredAssets.Add(property);
+                        }
                     }
                 }
             });
