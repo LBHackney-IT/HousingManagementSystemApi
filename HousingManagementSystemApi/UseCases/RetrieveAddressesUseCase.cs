@@ -95,12 +95,19 @@ namespace HousingManagementSystemApi.UseCases
             var tenureInformation = await _tenureGateway.RetrieveTenureType(asset?.Tenure?.Id);
             var tenureTypeCode = tenureInformation?.TenureType?.Code;
 
-            if (tenureTypeCode != null && EligibleTenureCodes.Contains(tenureTypeCode))
+            if (tenureTypeCode == null)
             {
-                return property;
+                _logger.LogInformation("TenureTypeCode was null for postCode {PostCode}. Skipping iteration", postCode);
+                return null;
             }
 
-            return null;
+            if (!EligibleTenureCodes.Contains(tenureTypeCode))
+            {
+                _logger.LogInformation("The asset was skipped because tenureTypeCode was {TenureTypeCode} for postCode {PostCode}. Skipping iteration", tenureTypeCode, postCode);
+                return null;
+            }
+
+            return property;
         }
     }
 }
