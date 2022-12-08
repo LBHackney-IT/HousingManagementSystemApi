@@ -20,6 +20,7 @@ namespace HousingManagementSystemApi
                 .CreateLogger();
 
             builder.SetupSentry(true);
+            builder.UseSerilog();
             builder
                 .UseStartup<Startup>();
         }
