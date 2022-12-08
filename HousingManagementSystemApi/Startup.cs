@@ -15,6 +15,7 @@ namespace HousingManagementSystemApi
     using Hackney.Shared.Asset.Domain;
     using Hackney.Shared.Tenure.Domain;
     using HousingRepairsOnline.Authentication.DependencyInjection;
+    using Microsoft.Extensions.Logging;
     using Microsoft.Extensions.Logging.Abstractions;
     using UseCases;
 
@@ -54,7 +55,8 @@ namespace HousingManagementSystemApi
                 var addressesGateway = s.GetService<IAddressesGateway>();
                 var eligibleAssets = EligibleAssetTypes;
                 var eligibleTenureTypes = EligibleTenureTypes;
-                return new RetrieveAddressesUseCase(addressesGateway, assetGateway, eligibleAssets, tenureGateway, eligibleTenureTypes, new NullLogger<RetrieveAddressesUseCase>());
+                var logger = s.GetService<ILogger<RetrieveAddressesUseCase>>();
+                return new RetrieveAddressesUseCase(addressesGateway, assetGateway, eligibleAssets, tenureGateway, eligibleTenureTypes, logger);
             });
 
             AddHttpClients(services);
