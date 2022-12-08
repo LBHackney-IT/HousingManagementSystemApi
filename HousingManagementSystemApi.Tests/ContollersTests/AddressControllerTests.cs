@@ -2,10 +2,12 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Castle.Core.Logging;
 using FluentAssertions;
 using HACT.Dtos;
 using HousingManagementSystemApi.Controllers;
 using HousingManagementSystemApi.UseCases;
+using Microsoft.Extensions.Logging.Abstractions;
 using Moq;
 using Xunit;
 
@@ -22,7 +24,7 @@ namespace HousingManagementSystemApi.Tests.ContollersTests
             postcode = "postcode";
 
             retrieveAddressesUseCaseMock = new Mock<IRetrieveAddressesUseCase>();
-            systemUnderTest = new AddressesController(retrieveAddressesUseCaseMock.Object);
+            systemUnderTest = new AddressesController(retrieveAddressesUseCaseMock.Object, new NullLogger<AddressesController>());
         }
 
         private void SetupDummyAddresses()
