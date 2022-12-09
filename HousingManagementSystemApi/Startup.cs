@@ -50,13 +50,19 @@ namespace HousingManagementSystemApi
 
             services.AddTransient<IRetrieveAddressesUseCase, RetrieveAddressesUseCase>(s =>
             {
-                var tenureGateway = s.GetService<ITenureGateway>();
-                var assetGateway = s.GetService<IAssetGateway>();
                 var addressesGateway = s.GetService<IAddressesGateway>();
+                var logger = s.GetService<ILogger<RetrieveAddressesUseCase>>();
+                return new RetrieveAddressesUseCase(addressesGateway, logger);
+            });
+
+            services.AddTransient<IVerifyPropertyEligibilityUseCase, VerifyPropertyEligibilityUseCase>(s =>
+            {
+                var assetGateway = s.GetService<IAssetGateway>();
+                var tenureGateway = s.GetService<ITenureGateway>();
                 var eligibleAssets = EligibleAssetTypes;
                 var eligibleTenureTypes = EligibleTenureTypes;
-                var logger = s.GetService<ILogger<RetrieveAddressesUseCase>>();
-                return new RetrieveAddressesUseCase(addressesGateway, assetGateway, eligibleAssets, tenureGateway, eligibleTenureTypes, logger);
+                var logger = s.GetService<ILogger<VerifyPropertyEligibilityUseCase>>();
+                return new VerifyPropertyEligibilityUseCase(assetGateway, eligibleAssets, tenureGateway, eligibleTenureTypes, logger);
             });
 
             AddHttpClients(services);
