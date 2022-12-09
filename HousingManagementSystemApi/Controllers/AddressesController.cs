@@ -29,7 +29,7 @@ namespace HousingManagementSystemApi.Controllers
             try
             {
                 var result = await retrieveAddressesUseCase.Execute(postcode);
-                _logger.LogInformation($"Number of results being returned by AddressesController.Address: {result.Count()} - for postcode ${postcode}");
+                _logger.LogInformation($"Number of results being returned by AddressesController.Address: {result?.Count()} - for postcode {postcode}");
                 return Ok(result);
             }
             catch (Exception e)
