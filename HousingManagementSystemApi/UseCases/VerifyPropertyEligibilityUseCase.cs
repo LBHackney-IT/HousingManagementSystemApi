@@ -63,7 +63,7 @@ namespace HousingManagementSystemApi.UseCases
 
             if (asset.Tenure == null || asset.Tenure.Id == null)
             {
-                _logger.LogInformation("Tenure or TenureId was null for postCode {PropertyId}", propertyId);
+                _logger.LogInformation("Tenure or TenureId was null for {PropertyId}", propertyId);
                 return new PropertyEligibilityResult(false, $"The asset with {propertyId} has no valid tenure");
             }
 
