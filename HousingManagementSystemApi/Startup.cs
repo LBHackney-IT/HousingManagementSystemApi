@@ -9,14 +9,11 @@ using Microsoft.OpenApi.Models;
 namespace HousingManagementSystemApi
 {
     using System.Collections.Generic;
-    using System.Net.Http;
-    using Castle.Core.Logging;
     using Gateways;
     using Hackney.Shared.Asset.Domain;
     using Hackney.Shared.Tenure.Domain;
     using HousingRepairsOnline.Authentication.DependencyInjection;
     using Microsoft.Extensions.Logging;
-    using Microsoft.Extensions.Logging.Abstractions;
     using UseCases;
 
     public class Startup

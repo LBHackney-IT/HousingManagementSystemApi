@@ -72,14 +72,14 @@ namespace HousingManagementSystemApi.UseCases
 
             if (tenureTypeCode == null)
             {
-                _logger.LogInformation("TenureTypeCode was null for asset with property ID {PropertyId}", propertyId);
-                return new PropertyEligibilityResult(false, $"TenureTypeCode was null for asset with property ID {propertyId}");
+                _logger.LogInformation("Tenure type code was null for asset with property ID {PropertyId}", propertyId);
+                return new PropertyEligibilityResult(false, $"Tenure type code was null for asset with property ID {propertyId}");
             }
 
             if (!EligibleTenureCodes.Contains(tenureTypeCode))
             {
                 _logger.LogInformation("TenureTypeCode for asset with property ID {PropertyId} is not suitable for Online Repairs", propertyId);
-                return new PropertyEligibilityResult(false, $"TenureTypeCode for asset with property ID {propertyId} is not suitable for Online Repairs. Skipping iteration");
+                return new PropertyEligibilityResult(false, $"Tenure type for property {propertyId} is not suitable for Online Repairs");
             }
 
             return new PropertyEligibilityResult(true, "The property is valid");
