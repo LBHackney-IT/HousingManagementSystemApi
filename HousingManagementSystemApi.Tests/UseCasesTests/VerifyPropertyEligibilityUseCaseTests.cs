@@ -3,14 +3,14 @@ namespace HousingManagementSystemApi.Tests.UseCasesTests
     using System;
     using System.Collections.Generic;
     using System.Threading.Tasks;
-    using Moq;
-    using Xunit;
-    using HousingManagementSystemApi.Gateways;
+    using Hackney.Shared.Asset.Boundary.Response;
     using Hackney.Shared.Asset.Domain;
     using Hackney.Shared.Tenure.Domain;
-    using Hackney.Shared.Asset.Boundary.Response;
+    using HousingManagementSystemApi.Gateways;
     using HousingManagementSystemApi.UseCases;
     using Microsoft.Extensions.Logging.Abstractions;
+    using Moq;
+    using Xunit;
 
     public class VerifyPropertyEligibilityUseCaseTests
     {
