@@ -175,22 +175,5 @@ namespace HousingManagementSystemApi.Tests.UseCasesTests
             // Assert
             Assert.True(result.PropertyEligible);
         }
-
-        [Fact]
-        public async Task GivenAPostcode_WhenAnAddressExistsWithANullTenure_ThenAPropertyIsNotReturned()
-        {
-            const string TestPostcode = "postcode";
-            var eligibleTenureType = TenureTypes.Secure;
-
-            retrieveAssetGateway.Setup(x => x.RetrieveAsset("assetId"))
-                .ReturnsAsync(new AssetResponseObject { AssetType = AssetType.Dwelling });
-
-
-            tenureGateway.Setup(x => x.RetrieveTenureType("Id"))
-                .ReturnsAsync(new TenureInformation { TenureType = TenureTypes.Secure });
-
-            // Act
-            var result = await this.sut.Execute(TestPostcode);
-        }
     }
 }
