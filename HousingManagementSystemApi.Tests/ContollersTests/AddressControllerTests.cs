@@ -18,13 +18,15 @@ namespace HousingManagementSystemApi.Tests.ContollersTests
     {
         private readonly AddressesController systemUnderTest;
         private readonly Mock<IRetrieveAddressesUseCase> retrieveAddressesUseCaseMock;
+        private readonly Mock<IVerifyPropertyEligibilityUseCase> verifyPropertyEligibilityUseCase;
         private readonly string postcode;
         public AddressControllerTests()
         {
             postcode = "postcode";
 
             retrieveAddressesUseCaseMock = new Mock<IRetrieveAddressesUseCase>();
-            systemUnderTest = new AddressesController(retrieveAddressesUseCaseMock.Object, new NullLogger<AddressesController>());
+            verifyPropertyEligibilityUseCase = new Mock<IVerifyPropertyEligibilityUseCase>();
+            systemUnderTest = new AddressesController(retrieveAddressesUseCaseMock.Object, verifyPropertyEligibilityUseCase.Object, new NullLogger<AddressesController>());
         }
 
         private void SetupDummyAddresses()

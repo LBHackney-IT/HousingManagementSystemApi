@@ -9,14 +9,11 @@ using Microsoft.OpenApi.Models;
 namespace HousingManagementSystemApi
 {
     using System.Collections.Generic;
-    using System.Net.Http;
-    using Castle.Core.Logging;
     using Gateways;
     using Hackney.Shared.Asset.Domain;
     using Hackney.Shared.Tenure.Domain;
     using HousingRepairsOnline.Authentication.DependencyInjection;
     using Microsoft.Extensions.Logging;
-    using Microsoft.Extensions.Logging.Abstractions;
     using UseCases;
 
     public class Startup
@@ -50,13 +47,19 @@ namespace HousingManagementSystemApi
 
             services.AddTransient<IRetrieveAddressesUseCase, RetrieveAddressesUseCase>(s =>
             {
-                var tenureGateway = s.GetService<ITenureGateway>();
-                var assetGateway = s.GetService<IAssetGateway>();
                 var addressesGateway = s.GetService<IAddressesGateway>();
+                var logger = s.GetService<ILogger<RetrieveAddressesUseCase>>();
+                return new RetrieveAddressesUseCase(addressesGateway, logger);
+            });
+
+            services.AddTransient<IVerifyPropertyEligibilityUseCase, VerifyPropertyEligibilityUseCase>(s =>
+            {
+                var assetGateway = s.GetService<IAssetGateway>();
+                var tenureGateway = s.GetService<ITenureGateway>();
                 var eligibleAssets = EligibleAssetTypes;
                 var eligibleTenureTypes = EligibleTenureTypes;
-                var logger = s.GetService<ILogger<RetrieveAddressesUseCase>>();
-                return new RetrieveAddressesUseCase(addressesGateway, assetGateway, eligibleAssets, tenureGateway, eligibleTenureTypes, logger);
+                var logger = s.GetService<ILogger<VerifyPropertyEligibilityUseCase>>();
+                return new VerifyPropertyEligibilityUseCase(assetGateway, eligibleAssets, tenureGateway, eligibleTenureTypes, logger);
             });
 
             AddHttpClients(services);
