@@ -27,6 +27,7 @@ namespace HousingManagementSystemApi.Controllers
         }
 
         [HttpGet]
+        [Route("addresses")]
         public async Task<IActionResult> Address([FromQuery] string postcode)
         {
             try
@@ -44,6 +45,7 @@ namespace HousingManagementSystemApi.Controllers
         }
 
         [HttpGet]
+        [Route("propertyeligible")]
         public async Task<IActionResult> VerifyPropertyEligibility([FromQuery] string propertyId)
         {
             _logger.LogInformation($"Verifying property eligibility for property {propertyId}");
