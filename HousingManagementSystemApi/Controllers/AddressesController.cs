@@ -27,6 +27,7 @@ namespace HousingManagementSystemApi.Controllers
         }
 
         [HttpGet]
+        [Route("addresses")]
         public async Task<IActionResult> Address([FromQuery] string postcode)
         {
             try
