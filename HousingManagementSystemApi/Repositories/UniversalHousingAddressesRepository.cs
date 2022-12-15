@@ -8,23 +8,24 @@ namespace HousingManagementSystemApi.Repositories
     using Ardalis.GuardClauses;
     using Dapper;
     using HACT.Dtos;
+    using HousingManagementSystemApi.Repositories.Interfaces;
     using JetBrains.Annotations;
     using Models;
 
     public class UniversalHousingAddressesRepository : IAddressesRepository
     {
-        private Func<IDbConnection> dbConnectionFunc;
+        private readonly Func<IDbConnection> _dbConnectionFunc;
 
         public UniversalHousingAddressesRepository([NotNull] Func<IDbConnection> dbConnectionFunc)
         {
             Guard.Against.Null(dbConnectionFunc, nameof(dbConnectionFunc));
 
-            this.dbConnectionFunc = dbConnectionFunc;
+            _dbConnectionFunc = dbConnectionFunc;
         }
 
-        public async Task<IEnumerable<PropertyAddress>> GetAddressesByPostcode([NotNull] string postcode)
+        public async Task<IEnumerable<PropertyAddress>> GetAddressesByPostcode([NotNull] string postCode)
         {
-            Guard.Against.NullOrWhiteSpace(postcode, nameof(postcode));
+            Guard.Against.NullOrWhiteSpace(postCode, nameof(postCode));
 
             var sql = @$"SELECT RTRIM(pr.prop_ref) AS PropertyReference
                 ,pr.u_nlpguprn AS Uprn
@@ -43,11 +44,11 @@ namespace HousingManagementSystemApi.Repositories
                     ON r.prop_type = ptype.lu_ref
                 WHERE level_code in ('2')
                 AND eot = '1900-01-01 00:00:00'
-                AND (UPPER(REPLACE(post_code, ' ','')) like UPPER(REPLACE('%{postcode}%', ' ','')))
+                AND (UPPER(REPLACE(post_code, ' ','')) like UPPER(REPLACE('%{postCode}%', ' ','')))
             ";
 
             var result = Enumerable.Empty<PropertyAddress>();
-            using (var dbConnection = dbConnectionFunc())
+            using (var dbConnection = _dbConnectionFunc())
             {
                 var universalHousingAddresses = await dbConnection.QueryAsync<UniversalHousingAddress>(sql);
                 result = universalHousingAddresses.Select(uhAddress => uhAddress.ToHactPropertyAddress());

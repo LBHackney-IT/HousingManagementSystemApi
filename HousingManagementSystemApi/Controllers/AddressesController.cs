@@ -4,6 +4,7 @@ namespace HousingManagementSystemApi.Controllers
 {
     using System;
     using System.Linq;
+    using HousingManagementSystemApi.UseCases.Interfaces;
     using Microsoft.Extensions.Logging;
     using Sentry;
     using UseCases;
@@ -29,13 +30,13 @@ namespace HousingManagementSystemApi.Controllers
             try
             {
                 var result = await _retrieveAddressesUseCase.Execute(postcode);
-                _logger.LogInformation($"Number of results being returned by AddressesController.Address: {result?.Count()} - for postcode {postcode}");
+                _logger.LogInformation("Number of results being returned by AddressesController.Address: {Count} - for postcode {Postcode}", result?.Count(), postcode);
                 return Ok(result);
             }
             catch (Exception e)
             {
                 SentrySdk.CaptureException(e);
-                _logger.LogInformation($"Error {e.Message} occurred in AddressesController.Address while retrieving address results for postcode {postcode}. Exception {e}");
+                _logger.LogInformation("Error {ErrorMessage} occurred in AddressesController.Address while retrieving address results for postcode {PostCode}", e.Message, postcode);
                 return StatusCode(500, e.Message);
             }
         }

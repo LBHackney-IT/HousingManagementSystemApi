@@ -4,22 +4,24 @@ namespace HousingManagementSystemApi.Gateways
     using System.Threading.Tasks;
     using Ardalis.GuardClauses;
     using HACT.Dtos;
+    using HousingManagementSystemApi.Gateways.Interfaces;
+    using HousingManagementSystemApi.Repositories.Interfaces;
     using Repositories;
 
     public class AddressesDatabaseGateway : IAddressesGateway
     {
-        private readonly IAddressesRepository addressesRepository;
+        private readonly IAddressesRepository _addressesRepository;
 
         public AddressesDatabaseGateway(IAddressesRepository addressesRepository)
         {
-            this.addressesRepository = addressesRepository;
+            _addressesRepository = addressesRepository;
         }
 
-        public Task<IEnumerable<PropertyAddress>> SearchByPostcode(string postcode)
+        public Task<IEnumerable<PropertyAddress>> SearchByPostcode(string postCode)
         {
-            Guard.Against.NullOrWhiteSpace(postcode, nameof(postcode));
+            Guard.Against.NullOrWhiteSpace(postCode, nameof(postCode));
 
-            return addressesRepository.GetAddressesByPostcode(postcode);
+            return _addressesRepository.GetAddressesByPostcode(postCode);
         }
     }
 }

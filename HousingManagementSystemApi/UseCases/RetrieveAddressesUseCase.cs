@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using HACT.Dtos;
-using HousingManagementSystemApi.Gateways;
 
 namespace HousingManagementSystemApi.UseCases
 {
@@ -11,6 +10,8 @@ namespace HousingManagementSystemApi.UseCases
     using Amazon.Runtime.Internal.Util;
     using Hackney.Shared.Asset.Domain;
     using Hackney.Shared.Tenure.Domain;
+    using HousingManagementSystemApi.Gateways.Interfaces;
+    using HousingManagementSystemApi.UseCases.Interfaces;
     using Microsoft.Extensions.Logging;
 
     public class RetrieveAddressesUseCase : IRetrieveAddressesUseCase

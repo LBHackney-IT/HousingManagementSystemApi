@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace HousingManagementSystemApi.Controllers
 {
     using System;
+    using HousingManagementSystemApi.UseCases.Interfaces;
     using Microsoft.Extensions.Logging;
     using Sentry;
     using UseCases;
@@ -13,23 +14,23 @@ namespace HousingManagementSystemApi.Controllers
     [ApiVersion("1.0")]
     public class PropertyEligibleController : ControllerBase
     {
-        private readonly IVerifyPropertyEligibilityUseCase verifyPropertyEligibilityUseCase;
+        private readonly IVerifyPropertyEligibilityUseCase _verifyPropertyEligibilityUseCase;
         private readonly ILogger<AddressesController> _logger;
 
         public PropertyEligibleController(IVerifyPropertyEligibilityUseCase verifyPropertyEligibilityUseCase, ILogger<AddressesController> logger)
         {
-            this.verifyPropertyEligibilityUseCase = verifyPropertyEligibilityUseCase;
+            _verifyPropertyEligibilityUseCase = verifyPropertyEligibilityUseCase;
             _logger = logger;
         }
 
         [HttpGet]
         public async Task<IActionResult> VerifyPropertyEligibility([FromQuery] string propertyId)
         {
-            _logger.LogInformation($"Verifying property eligibility for property {propertyId}");
+            _logger.LogInformation("Verifying property eligibility for property {PropertyId}", propertyId);
 
             try
             {
-                var result = await verifyPropertyEligibilityUseCase.Execute(propertyId);
+                var result = await _verifyPropertyEligibilityUseCase.Execute(propertyId);
                 return Ok(result);
             }
             catch (Exception e)

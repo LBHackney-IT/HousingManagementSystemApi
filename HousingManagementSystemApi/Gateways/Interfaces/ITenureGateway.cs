@@ -1,7 +1,7 @@
 using System;
 using System.Threading.Tasks;
 
-namespace HousingManagementSystemApi.Gateways
+namespace HousingManagementSystemApi.Gateways.Interfaces
 {
     using Hackney.Shared.Tenure.Domain;
 

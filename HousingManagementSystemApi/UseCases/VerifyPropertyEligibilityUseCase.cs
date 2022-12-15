@@ -11,7 +11,9 @@ namespace HousingManagementSystemApi.UseCases
     using Amazon.Runtime.Internal.Util;
     using Hackney.Shared.Asset.Domain;
     using Hackney.Shared.Tenure.Domain;
+    using HousingManagementSystemApi.Gateways.Interfaces;
     using HousingManagementSystemApi.Models;
+    using HousingManagementSystemApi.UseCases.Interfaces;
     using Microsoft.Extensions.Logging;
 
     public class VerifyPropertyEligibilityUseCase : IVerifyPropertyEligibilityUseCase
@@ -21,7 +23,7 @@ namespace HousingManagementSystemApi.UseCases
         private readonly ITenureGateway _tenureGateway;
         private readonly ILogger<VerifyPropertyEligibilityUseCase> _logger;
 
-        private IEnumerable<string> EligibleTenureCodes { get; }
+        private readonly IEnumerable<string> _eligibleTenureCodes;
 
         public VerifyPropertyEligibilityUseCase(
             IAssetGateway assetGateway,
@@ -33,8 +35,9 @@ namespace HousingManagementSystemApi.UseCases
             _assetGateway = assetGateway;
             _assetTypes = assetTypes;
             _tenureGateway = tenureGateway;
-            EligibleTenureCodes = eligibleTenureTypes.Select(x => x.Code);
             _logger = logger;
+
+            _eligibleTenureCodes = eligibleTenureTypes.Select(x => x.Code);
         }
 
         public async Task<PropertyEligibilityResult> Execute(string propertyId)
@@ -76,7 +79,7 @@ namespace HousingManagementSystemApi.UseCases
                 return new PropertyEligibilityResult(false, $"Tenure type code was null for asset with property ID {propertyId}");
             }
 
-            if (!EligibleTenureCodes.Contains(tenureTypeCode))
+            if (!_eligibleTenureCodes.Contains(tenureTypeCode))
             {
                 _logger.LogInformation("TenureTypeCode for asset with property ID {PropertyId} is not suitable for Online Repairs", propertyId);
                 return new PropertyEligibilityResult(false, $"Tenure type for property {propertyId} is not suitable for Online Repairs");

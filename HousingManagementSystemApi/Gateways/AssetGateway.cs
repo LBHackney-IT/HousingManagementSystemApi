@@ -9,20 +9,19 @@ using Hackney.Shared.Asset.Boundary.Response;
 
 public class AssetGateway : IAssetGateway
 {
-    private readonly IHttpClientFactory httpClientFactory;
+    private readonly IHttpClientFactory _httpClientFactory;
 
     public AssetGateway(IHttpClientFactory httpClientFactory)
     {
-        this.httpClientFactory = httpClientFactory;
+        _httpClientFactory = httpClientFactory;
     }
 
     public async Task<AssetResponseObject> RetrieveAsset(string assetId)
     {
         Guard.Against.NullOrWhiteSpace(assetId, nameof(assetId));
 
-        var httpClient = httpClientFactory.CreateClient(HttpClientNames.Asset);
-        var request = new HttpRequestMessage(HttpMethod.Get,
-            $"assets/assetId/{assetId}");
+        var httpClient = _httpClientFactory.CreateClient(HttpClientNames.Asset);
+        var request = new HttpRequestMessage(HttpMethod.Get, $"assets/assetId/{assetId}");
         var response = await httpClient.SendAsync(request);
 
         var data = new AssetResponseObject();
