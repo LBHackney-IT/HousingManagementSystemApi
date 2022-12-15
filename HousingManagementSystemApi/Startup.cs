@@ -12,6 +12,8 @@ namespace HousingManagementSystemApi
     using Gateways;
     using Hackney.Shared.Asset.Domain;
     using Hackney.Shared.Tenure.Domain;
+    using HousingManagementSystemApi.Gateways.Interfaces;
+    using HousingManagementSystemApi.UseCases.Interfaces;
     using HousingRepairsOnline.Authentication.DependencyInjection;
     using Microsoft.Extensions.Logging;
     using UseCases;

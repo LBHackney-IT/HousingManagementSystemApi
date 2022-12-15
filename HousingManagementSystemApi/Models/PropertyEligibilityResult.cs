@@ -4,8 +4,8 @@ namespace HousingManagementSystemApi.Models
     {
         public PropertyEligibilityResult(bool propertyEligible, string reason)
         {
-            this.PropertyEligible = propertyEligible;
-            this.Reason = reason;
+            PropertyEligible = propertyEligible;
+            Reason = reason;
         }
 
         public bool PropertyEligible { get; set; }

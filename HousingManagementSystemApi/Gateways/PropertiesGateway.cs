@@ -9,24 +9,24 @@ using HACT.Dtos;
 namespace HousingManagementSystemApi.Gateways
 {
     using Ardalis.GuardClauses;
+    using HousingManagementSystemApi.Gateways.Interfaces;
     using Models;
 
     public class PropertiesGateway : IAddressesGateway
     {
-        private readonly IHttpClientFactory httpClientFactory;
+        private readonly IHttpClientFactory _httpClientFactory;
 
         public PropertiesGateway(IHttpClientFactory httpClientFactory)
         {
-            this.httpClientFactory = httpClientFactory;
+            _httpClientFactory = httpClientFactory;
         }
 
-        public async Task<IEnumerable<PropertyAddress>> SearchByPostcode(string postcode)
+        public async Task<IEnumerable<PropertyAddress>> SearchByPostcode(string postCode)
         {
-            Guard.Against.NullOrWhiteSpace(postcode, nameof(postcode));
+            Guard.Against.NullOrWhiteSpace(postCode, nameof(postCode));
 
-            var httpClient = httpClientFactory.CreateClient(HttpClientNames.Properties);
-            var request = new HttpRequestMessage(HttpMethod.Get,
-                $"properties?postcode={postcode}&pageSize=100");
+            var httpClient = _httpClientFactory.CreateClient(HttpClientNames.Properties);
+            var request = new HttpRequestMessage(HttpMethod.Get, $"properties?postcode={postCode}&pageSize=100");
             var response = await httpClient.SendAsync(request);
 
             var data = Enumerable.Empty<PropertyApiResponse>();

@@ -7,6 +7,7 @@ namespace HousingManagementSystemApi.Tests.GatewaysTests
     using FluentAssertions;
     using Gateways;
     using HACT.Dtos;
+    using HousingManagementSystemApi.Repositories.Interfaces;
     using Moq;
     using Repositories;
     using Xunit;

@@ -7,6 +7,7 @@ namespace HousingManagementSystemApi.Tests.UseCasesTests
     using Hackney.Shared.Asset.Domain;
     using Hackney.Shared.Tenure.Domain;
     using HousingManagementSystemApi.Gateways;
+    using HousingManagementSystemApi.Gateways.Interfaces;
     using HousingManagementSystemApi.UseCases;
     using Microsoft.Extensions.Logging.Abstractions;
     using Moq;

@@ -7,7 +7,7 @@ using FluentAssertions;
 using HACT.Dtos;
 using HousingManagementSystemApi.Controllers;
 using HousingManagementSystemApi.Models;
-using HousingManagementSystemApi.UseCases;
+using HousingManagementSystemApi.UseCases.Interfaces;
 using Microsoft.Extensions.Logging.Abstractions;
 using Moq;
 using Xunit;

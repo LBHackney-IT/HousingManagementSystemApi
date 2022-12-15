@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 using HACT.Dtos;
 using HousingManagementSystemApi.Models;
 
-namespace HousingManagementSystemApi.UseCases
+namespace HousingManagementSystemApi.UseCases.Interfaces
 {
     public interface IVerifyPropertyEligibilityUseCase
     {

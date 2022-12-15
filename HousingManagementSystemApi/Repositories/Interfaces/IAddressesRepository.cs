@@ -1,4 +1,4 @@
-namespace HousingManagementSystemApi.Repositories
+namespace HousingManagementSystemApi.Repositories.Interfaces
 {
     using System.Collections.Generic;
     using System.Threading.Tasks;
@@ -6,6 +6,6 @@ namespace HousingManagementSystemApi.Repositories
 
     public interface IAddressesRepository
     {
-        Task<IEnumerable<PropertyAddress>> GetAddressesByPostcode(string postcode);
+        Task<IEnumerable<PropertyAddress>> GetAddressesByPostcode(string postCode);
     }
 }

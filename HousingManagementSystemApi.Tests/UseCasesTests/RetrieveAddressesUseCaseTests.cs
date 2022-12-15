@@ -3,7 +3,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using FluentAssertions;
 using HACT.Dtos;
-using HousingManagementSystemApi.Gateways;
 using HousingManagementSystemApi.UseCases;
 using Moq;
 using Xunit;
@@ -15,6 +14,7 @@ namespace HousingManagementSystemApi.Tests
     using Hackney.Shared.Asset.Boundary.Response;
     using Hackney.Shared.Asset.Domain;
     using Hackney.Shared.Tenure.Domain;
+    using HousingManagementSystemApi.Gateways.Interfaces;
     using Microsoft.Extensions.Logging.Abstractions;
 
     public class RetrieveAddressesUseCaseTests
