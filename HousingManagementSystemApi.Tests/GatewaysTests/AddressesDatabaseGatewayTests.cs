@@ -14,27 +14,25 @@ namespace HousingManagementSystemApi.Tests.GatewaysTests
 
     public class AddressesDatabaseGatewayTests
     {
-        private AddressesDatabaseGateway systemUnderTest;
-        private Mock<IAddressesRepository> addressesRepositoryMock;
+        private readonly AddressesDatabaseGateway _systemUnderTest;
+        private readonly Mock<IAddressesRepository> _addressesRepositoryMock;
 
         public AddressesDatabaseGatewayTests()
         {
-            this.addressesRepositoryMock = new Mock<IAddressesRepository>();
-            this.systemUnderTest = new AddressesDatabaseGateway(this.addressesRepositoryMock.Object);
+            _addressesRepositoryMock = new Mock<IAddressesRepository>();
+            _systemUnderTest = new AddressesDatabaseGateway(_addressesRepositoryMock.Object);
         }
 
         [Theory]
         [MemberData(nameof(InvalidArgumentTestData))]
 #pragma warning disable xUnit1026
-#pragma warning disable CA1707
         public async void GivenInvalidPostcodeArgument_WhenSearchingForPostcode_ThenAnExceptionIsThrown<T>(T exception, string postcode) where T : Exception
-#pragma warning restore CA1707
 #pragma warning restore xUnit1026
         {
             // Arrange
 
             // Act
-            Func<Task> act = async () => await systemUnderTest.SearchByPostcode(postcode);
+            Func<Task> act = async () => await _systemUnderTest.SearchByPostcode(postcode);
 
             // Assert
             await act.Should().ThrowExactlyAsync<T>();
@@ -48,31 +46,27 @@ namespace HousingManagementSystemApi.Tests.GatewaysTests
         }
 
         [Fact]
-#pragma warning disable CA1707
         public async void GivenValidPostcodeArgument_WhenSearchingForPostcode_ThenNoExceptionIsThrown()
-#pragma warning restore CA1707
         {
             // Arrange
 
             // Act
-            Func<Task> act = async () => await systemUnderTest.SearchByPostcode("M3 OW");
+            Func<Task> act = async () => await _systemUnderTest.SearchByPostcode("M3 OW");
 
             // Assert
             await act.Should().NotThrowAsync();
         }
 
         [Fact]
-#pragma warning disable CA1707
         public async void GivenValidPostcodeArgument_WhenSearchingForPostcode_ThenAddressesAreRetrievedFromTheDatabase()
-#pragma warning restore CA1707
         {
             // Arrange
             const string postcode = "M3 OW";
-            addressesRepositoryMock.Setup(repository => repository.GetAddressesByPostcode(postcode))
+            _addressesRepositoryMock.Setup(repository => repository.GetAddressesByPostcode(postcode))
                 .ReturnsAsync(new[] { new PropertyAddress() });
 
             // Act
-            var results = await this.systemUnderTest.SearchByPostcode(postcode);
+            var results = await this._systemUnderTest.SearchByPostcode(postcode);
 
             // Assert
             Assert.True(results.Any());

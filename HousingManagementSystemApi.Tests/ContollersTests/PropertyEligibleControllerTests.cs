@@ -14,36 +14,39 @@ using Xunit;
 
 namespace HousingManagementSystemApi.Tests.ContollersTests
 {
-
     public class PropertyEligibleControllerTests : ControllerTests
     {
-        private readonly PropertyEligibleController systemUnderTest;
-        private readonly Mock<IVerifyPropertyEligibilityUseCase> verifyPropertyEligibilityUseCase;
-        private readonly string propertyId;
+        private readonly PropertyEligibleController _systemUnderTest;
+        private readonly Mock<IVerifyPropertyEligibilityUseCase> _verifyPropertyEligibilityUseCase;
+
+        private const string PropertyId = "01234567";
+
         public PropertyEligibleControllerTests()
         {
-            propertyId = "01234567";
-
-            verifyPropertyEligibilityUseCase = new Mock<IVerifyPropertyEligibilityUseCase>();
-            systemUnderTest = new PropertyEligibleController(verifyPropertyEligibilityUseCase.Object, new NullLogger<AddressesController>());
+            _verifyPropertyEligibilityUseCase = new Mock<IVerifyPropertyEligibilityUseCase>();
+            _systemUnderTest = new PropertyEligibleController(_verifyPropertyEligibilityUseCase.Object, new NullLogger<AddressesController>());
         }
 
         private void SetupValidDummyPropertyEligibilityResult()
         {
             var validDummyPropertyEligibilityResult = new PropertyEligibilityResult(true, "The property is valid");
 
-            verifyPropertyEligibilityUseCase
-                .Setup(x => x.Execute(this.propertyId))
+            _verifyPropertyEligibilityUseCase
+                .Setup(x => x.Execute(PropertyId))
                 .ReturnsAsync(validDummyPropertyEligibilityResult);
         }
 
         [Fact]
         public async Task GivenAPropertyId_WhenAValidRequestIsMade_ItReturnsASuccessfullResponse()
         {
+            // Arrange
             SetupValidDummyPropertyEligibilityResult();
 
-            var result = await systemUnderTest.VerifyPropertyEligibility(this.propertyId);
-            verifyPropertyEligibilityUseCase.Verify(x => x.Execute(this.propertyId), Times.Once);
+            // Act
+            var result = await _systemUnderTest.VerifyPropertyEligibility(PropertyId);
+
+            // Assert
+            _verifyPropertyEligibilityUseCase.Verify(x => x.Execute(PropertyId), Times.Once);
             GetStatusCode(result).Should().Be(200);
         }
 
@@ -51,11 +54,12 @@ namespace HousingManagementSystemApi.Tests.ContollersTests
         public async Task GivenAnExceptionIsThrown_WhenRequestMadeToValidatePropertyEligibility_ResponseHttpStatusCodeIs500()
         {
             // Arrange
-            verifyPropertyEligibilityUseCase.Setup(x => x.Execute(It.IsAny<string>()))
+            _verifyPropertyEligibilityUseCase.Setup(x => x.Execute(It.IsAny<string>()))
                 .Throws<Exception>();
 
             // Act
-            var result = await systemUnderTest.VerifyPropertyEligibility(this.propertyId);
+            var result = await _systemUnderTest.VerifyPropertyEligibility(PropertyId);
+
             // Assert
             GetStatusCode(result).Should().Be(500);
         }

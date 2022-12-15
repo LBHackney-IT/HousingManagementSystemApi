@@ -13,62 +13,59 @@ namespace HousingManagementSystemApi.Tests.GatewaysTests
 
     public class PropertiesGatewayTests
     {
-        private readonly PropertiesGateway systemUnderTest;
+        private readonly PropertiesGateway _systemUnderTest;
+        private readonly MockHttpMessageHandler _mockHttp;
 
         private const string PostcodeSingleAddress = "E100 1QZ";
-        private string propertiesSearchResponseSingleAddress =
+        private const string PropertiesSearchResponseSingleAddress =
             @"[
-  {
-    ""propRef"": ""100000000001"",
-    ""postCode"": ""E100 1QZ"",
-    ""address1"": ""1A Old Hackney Road""
-  }
-]";
+                {
+                ""propRef"": ""100000000001"",
+                ""postCode"": ""E100 1QZ"",
+                ""address1"": ""1A Old Hackney Road""
+                }
+            ]";
 
         private const string PostcodeMultipleAddresses = "E100 1QQ";
-        private string PropertiesSearchResponseMultipleAddresses =
+        private const string PropertiesSearchResponseMultipleAddresses =
             @"[
-  {
-    ""propRef"": ""100000000001"",
-    ""postCode"": ""E100 1QQ"",
-    ""address1"": ""1A Old Hackney Road""
-  },
-    {
-    ""propRef"": ""100000000002"",
-    ""postCode"": ""E100 1QQ"",
-    ""address1"": ""2A Old Hackney Road""
-    }
-]";
-
-        private MockHttpMessageHandler mockHttp;
+              {
+                ""propRef"": ""100000000001"",
+                ""postCode"": ""E100 1QQ"",
+                ""address1"": ""1A Old Hackney Road""
+              },
+                {
+                ""propRef"": ""100000000002"",
+                ""postCode"": ""E100 1QQ"",
+                ""address1"": ""2A Old Hackney Road""
+                }
+            ]";
 
         public PropertiesGatewayTests()
         {
-            mockHttp = new MockHttpMessageHandler();
+            _mockHttp = new MockHttpMessageHandler();
 
-            mockHttp.When($"*properties").WithQueryString("postcode", PostcodeSingleAddress)
-                .Respond("application/json", propertiesSearchResponseSingleAddress);
+            _mockHttp.When($"*properties").WithQueryString("postcode", PostcodeSingleAddress)
+                .Respond("application/json", PropertiesSearchResponseSingleAddress);
 
-            var httpClient = mockHttp.ToHttpClient();
+            var httpClient = _mockHttp.ToHttpClient();
             httpClient.BaseAddress = new Uri("http://localhost/");
 
             var httpClientFactory = new Mock<IHttpClientFactory>();
             httpClientFactory.Setup(x => x.CreateClient(It.IsAny<string>())).Returns(httpClient);
-            systemUnderTest = new PropertiesGateway(httpClientFactory.Object);
+            _systemUnderTest = new PropertiesGateway(httpClientFactory.Object);
         }
 
         [Theory]
         [MemberData(nameof(InvalidArgumentTestData))]
 #pragma warning disable xUnit1026
-#pragma warning disable CA1707
         public async void GivenInvalidPostcodeArgument_WhenSearchingForPostcode_ThenAnExceptionIsThrown<T>(T exception, string postcode) where T : Exception
-#pragma warning restore CA1707
 #pragma warning restore xUnit1026
         {
             // Arrange
 
             // Act
-            Func<Task> act = async () => await systemUnderTest.SearchByPostcode(postcode);
+            Func<Task> act = async () => await _systemUnderTest.SearchByPostcode(postcode);
 
             // Assert
             await act.Should().ThrowExactlyAsync<T>();
@@ -82,72 +79,62 @@ namespace HousingManagementSystemApi.Tests.GatewaysTests
         }
 
         [Fact]
-#pragma warning disable CA1707
         public async void GivenValidPostcodeArgument_WhenSearchingForPostcode_ThenNoExceptionIsThrown()
-#pragma warning restore CA1707
         {
             // Arrange
 
             // Act
-            Func<Task> act = async () => await systemUnderTest.SearchByPostcode(PostcodeSingleAddress);
+            Func<Task> act = async () => await _systemUnderTest.SearchByPostcode(PostcodeSingleAddress);
 
             // Assert
             await act.Should().NotThrowAsync();
         }
 
         [Fact]
-#pragma warning disable CA1707
         public async void GivenValidPostcodeArgument_WhenSearchingForPostcode_ThenAddressesAreRetrievedFromApi()
-#pragma warning restore CA1707
         {
             // Arrange
 
             // Act
-            var results = await systemUnderTest.SearchByPostcode(PostcodeSingleAddress);
+            var results = await _systemUnderTest.SearchByPostcode(PostcodeSingleAddress);
 
             // Assert
             Assert.True(results.Any());
         }
 
         [Fact]
-#pragma warning disable CA1707
         public async void GivenNoPropertyInApiResponse_WhenSearchingForPostcode_ThenNoAddressesAreReturned()
-#pragma warning restore CA1707
         {
             // Arrange
 
             // Act
-            var results = await systemUnderTest.SearchByPostcode("E4 0PR");
+            var results = await _systemUnderTest.SearchByPostcode("E4 0PR");
 
             // Assert
             Assert.Empty(results);
         }
 
         [Fact]
-#pragma warning disable CA1707
         public async void GivenASinglePropertyInApiResponse_WhenSearchingForPostcode_ThenASingleAddressIsReturned()
-#pragma warning restore CA1707
         {
             // Arrange
 
             // Act
-            var results = await systemUnderTest.SearchByPostcode(PostcodeSingleAddress);
+            var results = await _systemUnderTest.SearchByPostcode(PostcodeSingleAddress);
 
             // Assert
             Assert.Single(results);
         }
 
         [Fact]
-#pragma warning disable CA1707
         public async void GivenMultiplePropertiesInApiResponse_WhenSearchingForPostcode_ThenMultipleAddressesAreReturned()
-#pragma warning restore CA1707
         {
             // Arrange
-            mockHttp.When($"*properties").WithQueryString("postcode", PostcodeMultipleAddresses)
+            _mockHttp.When($"*properties").WithQueryString("postcode", PostcodeMultipleAddresses)
                 .Respond("application/json", PropertiesSearchResponseMultipleAddresses);
 
             // Act
-            var results = await systemUnderTest.SearchByPostcode(PostcodeMultipleAddresses);
+            var results = await _systemUnderTest.SearchByPostcode(PostcodeMultipleAddresses);
 
             // Assert
             Assert.Equal(2, results.Count());

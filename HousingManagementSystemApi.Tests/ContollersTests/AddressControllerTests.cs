@@ -13,56 +13,64 @@ using Xunit;
 
 namespace HousingManagementSystemApi.Tests.ContollersTests
 {
-
     public class AddressControllerTests : ControllerTests
     {
-        private readonly AddressesController systemUnderTest;
-        private readonly Mock<IRetrieveAddressesUseCase> retrieveAddressesUseCaseMock;
-        private readonly string postcode;
+        private readonly AddressesController _systemUnderTest;
+        private readonly Mock<IRetrieveAddressesUseCase> _retrieveAddressesUseCaseMock;
+
+        private const string PostCode = "postcode";
+
         public AddressControllerTests()
         {
-            postcode = "postcode";
-
-            retrieveAddressesUseCaseMock = new Mock<IRetrieveAddressesUseCase>();
-            systemUnderTest = new AddressesController(retrieveAddressesUseCaseMock.Object, new NullLogger<AddressesController>());
+            _retrieveAddressesUseCaseMock = new Mock<IRetrieveAddressesUseCase>();
+            _systemUnderTest = new AddressesController(_retrieveAddressesUseCaseMock.Object, new NullLogger<AddressesController>());
         }
 
         private void SetupDummyAddresses()
         {
-            var dummyList = new List<PropertyAddress> { new() { PostalCode = this.postcode } };
-            retrieveAddressesUseCaseMock
-                .Setup(x => x.Execute(this.postcode))
+            var dummyList = new List<PropertyAddress> { new() { PostalCode = PostCode } };
+            _retrieveAddressesUseCaseMock
+                .Setup(x => x.Execute(PostCode))
                 .ReturnsAsync(dummyList);
         }
 
         [Fact]
         public async Task GivenAPostcode_WhenAValidAddressRequestIsMade_ItReturnsASuccessfullResponse()
         {
+            // Arrange
             SetupDummyAddresses();
 
-            var result = await systemUnderTest.Address(this.postcode);
-            retrieveAddressesUseCaseMock.Verify(x => x.Execute(this.postcode), Times.Once);
+            // Act
+            var result = await _systemUnderTest.Address(PostCode);
+
+            // Assert
+            _retrieveAddressesUseCaseMock.Verify(x => x.Execute(PostCode), Times.Once);
             GetStatusCode(result).Should().Be(200);
         }
 
         [Fact]
         public async Task GivenAPostcode_WhenAValidAddressRequestIsMade_ItReturnsCorrectData()
         {
+            // Arrange
             SetupDummyAddresses();
 
-            var result = await systemUnderTest.Address(postcode);
-            GetResultData<List<PropertyAddress>>(result).First().PostalCode.Should().Be(this.postcode);
+            // Act
+            var result = await _systemUnderTest.Address(PostCode);
+
+            // Assert
+            GetResultData<List<PropertyAddress>>(result).First().PostalCode.Should().Be(PostCode);
         }
 
         [Fact]
         public async Task GivenAnExceptionIsThrown_WhenRequestMadeForAddresses_ResponseHttpStatusCodeIs500()
         {
             // Arrange
-            retrieveAddressesUseCaseMock.Setup(x => x.Execute(It.IsAny<string>()))
+            _retrieveAddressesUseCaseMock.Setup(x => x.Execute(It.IsAny<string>()))
                 .Throws<Exception>();
 
             // Act
-            var result = await systemUnderTest.Address(postcode);
+            var result = await _systemUnderTest.Address(PostCode);
+
             // Assert
             GetStatusCode(result).Should().Be(500);
         }
@@ -72,11 +80,12 @@ namespace HousingManagementSystemApi.Tests.ContollersTests
         {
             // Arrange
             const string errorMessage = "An error message";
-            retrieveAddressesUseCaseMock.Setup(x => x.Execute(It.IsAny<string>()))
+            _retrieveAddressesUseCaseMock.Setup(x => x.Execute(It.IsAny<string>()))
                 .Throws(new Exception(errorMessage));
 
             // Act
-            var result = await systemUnderTest.Address(postcode);
+            var result = await _systemUnderTest.Address(PostCode);
+
             // Assert
             GetResultData<string>(result).Should().Be(errorMessage);
         }

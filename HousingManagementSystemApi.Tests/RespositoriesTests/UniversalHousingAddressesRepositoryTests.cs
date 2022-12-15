@@ -17,18 +17,26 @@ namespace HousingManagementSystemApi.Tests.RespositoriesTests
 
     public class UniversalHousingAddressesRepositoryTests
     {
+        private readonly Mock<IDbConnection> _dbConnectionMock;
+
+        private const string PostCode = "M3 OW";
+
+        public UniversalHousingAddressesRepositoryTests()
+        {
+            _dbConnectionMock = new Mock<IDbConnection>();
+
+        }
+
+
         [Fact]
         [SuppressMessage("ReSharper", "ObjectCreationAsStatement")]
-#pragma warning disable CA1707
         public void GivenNullArgument_WhenConstructing_ThenArgumentExceptionIsThrown()
-#pragma warning restore CA1707
         {
             // Arrange
 
             // Act
-#pragma warning disable CA1806
+
             Action act = () => new UniversalHousingAddressesRepository(null!);
-#pragma warning restore CA1806
 
             // Assert
             act.Should().Throw<ArgumentNullException>();
@@ -37,9 +45,7 @@ namespace HousingManagementSystemApi.Tests.RespositoriesTests
         [Theory]
         [MemberData(nameof(InvalidArgumentTestData))]
 #pragma warning disable xUnit1026
-#pragma warning disable CA1707
         public async void GivenInvalidPostcodeArgument_WhenSearchingForPostcode_ThenAnExceptionIsThrown<T>(T exception, string postcode) where T : Exception
-#pragma warning restore CA1707
 #pragma warning restore xUnit1026
         {
             // Arrange
@@ -61,21 +67,20 @@ namespace HousingManagementSystemApi.Tests.RespositoriesTests
         }
 
         [Fact]
-#pragma warning disable CA1707
         public async void GivenValidPostcodeArgument_WhenSearchingForPostcode_ThenNoExceptionIsThrown()
-#pragma warning restore CA1707
         {
             // Arrange
-            var universalHousingAddresses = new[] { new UniversalHousingAddress { PostCode = "M3 OW" } };
-            var dbConnectionMock = new Mock<IDbConnection>();
-            dbConnectionMock.SetupDapperAsync(c => c.QueryAsync<UniversalHousingAddress>(
-                        It.IsAny<string>(), null, null, null, null))
+            var universalHousingAddresses = new[] { new UniversalHousingAddress { PostCode = PostCode } };
+
+            _dbConnectionMock.SetupDapperAsync(c =>
+                c.QueryAsync<UniversalHousingAddress>(It.IsAny<string>(), null, null, null, null))
                 .ReturnsAsync(universalHousingAddresses);
-            var connectionFactory = new Func<IDbConnection>(() => dbConnectionMock.Object);
+
+            var connectionFactory = new Func<IDbConnection>(() => _dbConnectionMock.Object);
             var systemUnderTest = new UniversalHousingAddressesRepository(connectionFactory);
 
             // Act
-            Func<Task> act = async () => await systemUnderTest.GetAddressesByPostcode("M3 OW");
+            Func<Task> act = async () => await systemUnderTest.GetAddressesByPostcode(PostCode);
 
             // Assert
             await act.Should().NotThrowAsync();
@@ -83,27 +88,25 @@ namespace HousingManagementSystemApi.Tests.RespositoriesTests
 
 
         [Fact]
-#pragma warning disable CA1707
         public async void GivenValidPostcodeArgument_WhenSearchingForPostcode_ThenExpectedDataIsReturned()
-#pragma warning restore CA1707
         {
             // Arrange
-            var postCode = "M3 OW";
-            var universalHousingAddress = new UniversalHousingAddress { PostCode = postCode };
+            var universalHousingAddress = new UniversalHousingAddress { PostCode = PostCode };
             var universalHousingAddresses = new[] { universalHousingAddress };
-            var dbConnectionMock = new Mock<IDbConnection>();
-            dbConnectionMock.SetupDapperAsync(c => c.QueryAsync<UniversalHousingAddress>(
-                    It.IsAny<string>(), null, null, null, null))
+
+            _dbConnectionMock.SetupDapperAsync(c =>
+            c.QueryAsync<UniversalHousingAddress>(It.IsAny<string>(), null, null, null, null))
                 .ReturnsAsync(universalHousingAddresses);
-            var connectionFactory = new Func<IDbConnection>(() => dbConnectionMock.Object);
+
+            var connectionFactory = new Func<IDbConnection>(() => _dbConnectionMock.Object);
             var systemUnderTest = new UniversalHousingAddressesRepository(connectionFactory);
 
             // Act
-            var actual = await systemUnderTest.GetAddressesByPostcode(postCode);
+            var actual = await systemUnderTest.GetAddressesByPostcode(PostCode);
 
             // Assert
             actual.Should().HaveCount(1);
-            actual.Single().Should().BeEquivalentTo(new PropertyAddress { PostalCode = postCode });
+            actual.Single().Should().BeEquivalentTo(new PropertyAddress { PostalCode = PostCode });
         }
     }
 }

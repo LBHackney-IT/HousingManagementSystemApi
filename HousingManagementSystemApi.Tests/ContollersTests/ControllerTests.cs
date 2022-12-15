@@ -5,7 +5,6 @@ namespace HousingManagementSystemApi.Tests
 {
     public class ControllerTests
     {
-
         protected static T GetResultData<T>(IActionResult result)
         {
             return (T) (result as ObjectResult)?.Value;

@@ -26,7 +26,7 @@ namespace HousingManagementSystemApi.Controllers
         [HttpGet]
         public async Task<IActionResult> VerifyPropertyEligibility([FromQuery] string propertyId)
         {
-            _logger.LogInformation("Verifying property eligibility for property {PropertyId}",  propertyId);
+            _logger.LogInformation("Verifying property eligibility for property {PropertyId}", propertyId);
 
             try
             {
