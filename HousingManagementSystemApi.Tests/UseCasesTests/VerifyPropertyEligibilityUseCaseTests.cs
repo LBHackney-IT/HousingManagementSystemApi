@@ -54,7 +54,7 @@ namespace HousingManagementSystemApi.Tests.UseCasesTests
             const string HouseThatDoesntExist = "Missing";
 
             retrieveAssetGateway.Setup(x => x.RetrieveAsset(HouseThatDoesntExist))
-                .ReturnsAsync((AssetResponseObject)null);
+                .ReturnsAsync((AssetResponseObject) null);
 
             tenureGateway.Setup(x => x.RetrieveTenureType(It.IsAny<string>()))
                 .ReturnsAsync(new TenureInformation { TenureType = TenureTypes.Secure });
@@ -112,7 +112,7 @@ namespace HousingManagementSystemApi.Tests.UseCasesTests
                 });
 
             tenureGateway.Setup(x => x.RetrieveTenureType("TEN001"))
-                .ReturnsAsync((TenureInformation)null);
+                .ReturnsAsync((TenureInformation) null);
 
 
             // Act
