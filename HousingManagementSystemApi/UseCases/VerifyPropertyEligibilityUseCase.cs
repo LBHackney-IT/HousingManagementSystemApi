@@ -67,6 +67,19 @@ namespace HousingManagementSystemApi.UseCases
                 return new PropertyEligibilityResult(false, $"The asset with {propertyId} has no valid tenure");
             }
 
+            if (asset.AssetManagement == null)
+            {
+                _logger.LogInformation("Can't find TMO status for property {PropertyId}", propertyId);
+                return new PropertyEligibilityResult(false, $"Can't find TMO status for {propertyId}");
+            }
+
+            if (asset.AssetManagement.IsTMOManaged)
+            {
+                _logger.LogInformation("Property {PropertyId} is ineligible due to being managed by a TMO", propertyId);
+                return new PropertyEligibilityResult(false, $"Asset {propertyId} is managed by a TMO");
+
+            }
+
             var tenureInformation = await _tenureGateway.RetrieveTenureType(asset?.Tenure?.Id);
             var tenureTypeCode = tenureInformation?.TenureType?.Code;
 
