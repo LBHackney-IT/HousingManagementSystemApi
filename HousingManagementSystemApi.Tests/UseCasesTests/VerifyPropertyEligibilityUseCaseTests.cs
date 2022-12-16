@@ -108,6 +108,10 @@ namespace HousingManagementSystemApi.Tests.UseCasesTests
                     Tenure = new AssetTenureResponseObject
                     {
                         Id = "TEN001"
+                    },
+                    AssetManagement = new AssetManagement
+                    {
+                        IsTMOManaged = false,
                     }
                 });
 
@@ -136,6 +140,10 @@ namespace HousingManagementSystemApi.Tests.UseCasesTests
                     Tenure = new AssetTenureResponseObject
                     {
                         Id = "TEN001"
+                    },
+                    AssetManagement = new AssetManagement
+                    {
+                        IsTMOManaged = false,
                     }
                 });
 
@@ -163,6 +171,10 @@ namespace HousingManagementSystemApi.Tests.UseCasesTests
                     Tenure = new AssetTenureResponseObject
                     {
                         Id = "TEN001"
+                    },
+                    AssetManagement = new AssetManagement
+                    {
+                        IsTMOManaged = false,
                     }
                 });
 
@@ -174,6 +186,64 @@ namespace HousingManagementSystemApi.Tests.UseCasesTests
 
             // Assert
             Assert.True(result.PropertyEligible);
+        }
+
+        [Fact]
+        public async Task GivenAMissingAssetManagementRecord_WhenUseCaseIsExecuted_ThenShouldBeAFailureResult()
+        {
+            // Arrange
+            const string HouseThatExists = "01234567";
+
+            retrieveAssetGateway.Setup(x => x.RetrieveAsset(HouseThatExists))
+                .ReturnsAsync(new AssetResponseObject
+                {
+                    AssetType = AssetType.Dwelling,
+                    Tenure = new AssetTenureResponseObject
+                    {
+                        Id = "TEN001"
+                    }
+                });
+
+            tenureGateway.Setup(x => x.RetrieveTenureType("TEN001"))
+                .ReturnsAsync(new TenureInformation { TenureType = TenureTypes.Secure });
+
+            // Act
+            var result = await this.sut.Execute(HouseThatExists);
+
+            // Assert
+            Assert.False(result.PropertyEligible);
+            Assert.Contains("Can't find TMO status for", result.Reason);
+        }
+
+        [Fact]
+        public async Task GivenATmoManagedProperty_WhenUseCaseIsExecuted_ThenShouldBeAFailureResult()
+        {
+            // Arrange
+            const string HouseThatExists = "01234567";
+
+            retrieveAssetGateway.Setup(x => x.RetrieveAsset(HouseThatExists))
+                .ReturnsAsync(new AssetResponseObject
+                {
+                    AssetType = AssetType.Dwelling,
+                    Tenure = new AssetTenureResponseObject
+                    {
+                        Id = "TEN001"
+                    },
+                    AssetManagement = new AssetManagement
+                    {
+                        IsTMOManaged = true,
+                    }
+                });
+
+            tenureGateway.Setup(x => x.RetrieveTenureType("TEN001"))
+                .ReturnsAsync(new TenureInformation { TenureType = TenureTypes.Secure });
+
+            // Act
+            var result = await this.sut.Execute(HouseThatExists);
+
+            // Assert
+            Assert.False(result.PropertyEligible);
+            Assert.Contains("is managed by a TMO", result.Reason);
         }
     }
 }
