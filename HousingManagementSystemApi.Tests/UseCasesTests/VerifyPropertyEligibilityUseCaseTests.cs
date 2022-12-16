@@ -189,7 +189,7 @@ namespace HousingManagementSystemApi.Tests.UseCasesTests
         }
 
         [Fact]
-        public async Task GivenAMissingAssetManagementRecord_WhenUseCaseIsExecuted_ThenShouldBeASuccessfulValidation()
+        public async Task GivenAMissingAssetManagementRecord_WhenUseCaseIsExecuted_ThenShouldBeAFailureResult()
         {
             // Arrange
             const string HouseThatExists = "01234567";
