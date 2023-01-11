@@ -5,6 +5,6 @@ namespace HousingManagementSystemApi.UseCases
 {
     public interface IRetrieveAddressesUseCase
     {
-        public Task<IEnumerable<PropertyAddress>> Execute(string postcode);
+        public Task<IEnumerable<PropertyAddress>> Execute(string postCode);
     }
 }
