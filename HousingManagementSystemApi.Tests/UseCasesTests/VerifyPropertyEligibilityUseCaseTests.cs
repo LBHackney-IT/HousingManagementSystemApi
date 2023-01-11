@@ -14,11 +14,11 @@ namespace HousingManagementSystemApi.Tests.UseCasesTests
 
     public class VerifyPropertyEligibilityUseCaseTests
     {
-        private readonly Mock<IAssetGateway> retrieveAssetGateway;
-        private readonly Mock<ITenureGateway> tenureGateway;
-        private readonly VerifyPropertyEligibilityUseCase sut;
+        private readonly Mock<IAssetGateway> _retrieveAssetGateway;
+        private readonly Mock<ITenureGateway> _tenureGateway;
+        private readonly VerifyPropertyEligibilityUseCase _sut;
 
-        public static IEnumerable<AssetType> EligibleAssetTypes = new[]
+        public static readonly IEnumerable<AssetType> EligibleAssetTypes = new[]
 {
             AssetType.Flat, AssetType.House, AssetType.Dwelling,
         };
@@ -32,16 +32,16 @@ namespace HousingManagementSystemApi.Tests.UseCasesTests
 
         public VerifyPropertyEligibilityUseCaseTests()
         {
-            this.retrieveAssetGateway = new Mock<IAssetGateway>();
-            this.tenureGateway = new Mock<ITenureGateway>();
-            this.sut = new VerifyPropertyEligibilityUseCase(retrieveAssetGateway.Object, EligibleAssetTypes, tenureGateway.Object, eligibleTenureTypes, new NullLogger<VerifyPropertyEligibilityUseCase>());
+            _retrieveAssetGateway = new Mock<IAssetGateway>();
+            _tenureGateway = new Mock<ITenureGateway>();
+            _sut = new VerifyPropertyEligibilityUseCase(_retrieveAssetGateway.Object, EligibleAssetTypes, _tenureGateway.Object, eligibleTenureTypes, new NullLogger<VerifyPropertyEligibilityUseCase>());
         }
 
         [Fact]
         public async Task GivenANullPropertyId_WhenUseCaseIsExecuted_ThenAnExceptionShouldBeThrown()
         {
             // Act
-            var action = async () => await this.sut.Execute(null);
+            var action = async () => await _sut.Execute(null);
 
             // Assert
             await Assert.ThrowsAsync<ArgumentNullException>(action);
@@ -53,14 +53,14 @@ namespace HousingManagementSystemApi.Tests.UseCasesTests
             // Arrange
             const string HouseThatDoesntExist = "Missing";
 
-            retrieveAssetGateway.Setup(x => x.RetrieveAsset(HouseThatDoesntExist))
+            _retrieveAssetGateway.Setup(x => x.RetrieveAsset(HouseThatDoesntExist))
                 .ReturnsAsync((AssetResponseObject)null);
 
-            tenureGateway.Setup(x => x.RetrieveTenureType(It.IsAny<string>()))
+            _tenureGateway.Setup(x => x.RetrieveTenureType(It.IsAny<string>()))
                 .ReturnsAsync(new TenureInformation { TenureType = TenureTypes.Secure });
 
             // Act
-            var result = await this.sut.Execute(HouseThatDoesntExist);
+            var result = await _sut.Execute(HouseThatDoesntExist);
 
             // Assert
             Assert.False(result.PropertyEligible);
@@ -74,7 +74,7 @@ namespace HousingManagementSystemApi.Tests.UseCasesTests
             // Arrange
             const string HouseThatExists = "01234567";
 
-            retrieveAssetGateway.Setup(x => x.RetrieveAsset(HouseThatExists))
+            _retrieveAssetGateway.Setup(x => x.RetrieveAsset(HouseThatExists))
                 .ReturnsAsync(new AssetResponseObject
                 {
                     AssetType = AssetType.TravellerSite,
@@ -84,11 +84,11 @@ namespace HousingManagementSystemApi.Tests.UseCasesTests
                     }
                 });
 
-            tenureGateway.Setup(x => x.RetrieveTenureType("TEN001"))
+            _tenureGateway.Setup(x => x.RetrieveTenureType("TEN001"))
                 .ReturnsAsync(new TenureInformation { TenureType = TenureTypes.Secure });
 
             // Act
-            var result = await this.sut.Execute(HouseThatExists);
+            var result = await _sut.Execute(HouseThatExists);
 
             // Assert
             Assert.False(result.PropertyEligible);
@@ -101,7 +101,7 @@ namespace HousingManagementSystemApi.Tests.UseCasesTests
             // Arrange
             const string HouseThatExists = "01234567";
 
-            retrieveAssetGateway.Setup(x => x.RetrieveAsset(HouseThatExists))
+            _retrieveAssetGateway.Setup(x => x.RetrieveAsset(HouseThatExists))
                 .ReturnsAsync(new AssetResponseObject
                 {
                     AssetType = AssetType.Dwelling,
@@ -115,12 +115,12 @@ namespace HousingManagementSystemApi.Tests.UseCasesTests
                     }
                 });
 
-            tenureGateway.Setup(x => x.RetrieveTenureType("TEN001"))
+            _tenureGateway.Setup(x => x.RetrieveTenureType("TEN001"))
                 .ReturnsAsync((TenureInformation)null);
 
 
             // Act
-            var result = await this.sut.Execute(HouseThatExists);
+            var result = await _sut.Execute(HouseThatExists);
 
             // Assert
             Assert.False(result.PropertyEligible);
@@ -133,7 +133,7 @@ namespace HousingManagementSystemApi.Tests.UseCasesTests
             // Arrange
             const string HouseThatExists = "01234567";
 
-            retrieveAssetGateway.Setup(x => x.RetrieveAsset(HouseThatExists))
+            _retrieveAssetGateway.Setup(x => x.RetrieveAsset(HouseThatExists))
                 .ReturnsAsync(new AssetResponseObject
                 {
                     AssetType = AssetType.Dwelling,
@@ -147,11 +147,11 @@ namespace HousingManagementSystemApi.Tests.UseCasesTests
                     }
                 });
 
-            tenureGateway.Setup(x => x.RetrieveTenureType("TEN001"))
+            _tenureGateway.Setup(x => x.RetrieveTenureType("TEN001"))
                 .ReturnsAsync(new TenureInformation { TenureType = TenureTypes.AsylumSeeker });
 
             // Act
-            var result = await this.sut.Execute(HouseThatExists);
+            var result = await _sut.Execute(HouseThatExists);
 
             // Assert
             Assert.False(result.PropertyEligible);
@@ -164,7 +164,7 @@ namespace HousingManagementSystemApi.Tests.UseCasesTests
             // Arrange
             const string HouseThatExists = "01234567";
 
-            retrieveAssetGateway.Setup(x => x.RetrieveAsset(HouseThatExists))
+            _retrieveAssetGateway.Setup(x => x.RetrieveAsset(HouseThatExists))
                 .ReturnsAsync(new AssetResponseObject
                 {
                     AssetType = AssetType.Dwelling,
@@ -178,11 +178,11 @@ namespace HousingManagementSystemApi.Tests.UseCasesTests
                     }
                 });
 
-            tenureGateway.Setup(x => x.RetrieveTenureType("TEN001"))
+            _tenureGateway.Setup(x => x.RetrieveTenureType("TEN001"))
                 .ReturnsAsync(new TenureInformation { TenureType = TenureTypes.Secure });
 
             // Act
-            var result = await this.sut.Execute(HouseThatExists);
+            var result = await _sut.Execute(HouseThatExists);
 
             // Assert
             Assert.True(result.PropertyEligible);
@@ -194,7 +194,7 @@ namespace HousingManagementSystemApi.Tests.UseCasesTests
             // Arrange
             const string HouseThatExists = "01234567";
 
-            retrieveAssetGateway.Setup(x => x.RetrieveAsset(HouseThatExists))
+            _retrieveAssetGateway.Setup(x => x.RetrieveAsset(HouseThatExists))
                 .ReturnsAsync(new AssetResponseObject
                 {
                     AssetType = AssetType.Dwelling,
@@ -204,11 +204,11 @@ namespace HousingManagementSystemApi.Tests.UseCasesTests
                     }
                 });
 
-            tenureGateway.Setup(x => x.RetrieveTenureType("TEN001"))
+            _tenureGateway.Setup(x => x.RetrieveTenureType("TEN001"))
                 .ReturnsAsync(new TenureInformation { TenureType = TenureTypes.Secure });
 
             // Act
-            var result = await this.sut.Execute(HouseThatExists);
+            var result = await _sut.Execute(HouseThatExists);
 
             // Assert
             Assert.False(result.PropertyEligible);
@@ -221,7 +221,7 @@ namespace HousingManagementSystemApi.Tests.UseCasesTests
             // Arrange
             const string HouseThatExists = "01234567";
 
-            retrieveAssetGateway.Setup(x => x.RetrieveAsset(HouseThatExists))
+            _retrieveAssetGateway.Setup(x => x.RetrieveAsset(HouseThatExists))
                 .ReturnsAsync(new AssetResponseObject
                 {
                     AssetType = AssetType.Dwelling,
@@ -235,11 +235,11 @@ namespace HousingManagementSystemApi.Tests.UseCasesTests
                     }
                 });
 
-            tenureGateway.Setup(x => x.RetrieveTenureType("TEN001"))
+            _tenureGateway.Setup(x => x.RetrieveTenureType("TEN001"))
                 .ReturnsAsync(new TenureInformation { TenureType = TenureTypes.Secure });
 
             // Act
-            var result = await this.sut.Execute(HouseThatExists);
+            var result = await _sut.Execute(HouseThatExists);
 
             // Assert
             Assert.False(result.PropertyEligible);

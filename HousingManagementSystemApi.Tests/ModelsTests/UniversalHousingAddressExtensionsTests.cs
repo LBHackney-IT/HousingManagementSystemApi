@@ -8,9 +8,7 @@ namespace HousingManagementSystemApi.Tests.ModelsTests
     public class UniversalHousingAddressExtensionsTests
     {
         [Fact]
-#pragma warning disable CA1707
         public void GivenEmptyUniversalHousingAddress_WhenConvertingToHactPropertyAddress_ThenPropertyAddressShouldBeEmpty()
-#pragma warning restore CA1707
         {
             // Arrange
 
@@ -22,9 +20,7 @@ namespace HousingManagementSystemApi.Tests.ModelsTests
         }
 
         [Fact]
-#pragma warning disable CA1707
         public void GivenUniversalHousingAddressWithPostCodeOnly_WhenConvertingToHactPropertyAddress_ThenPropertyAddressShouldOnlyContainPostalCode()
-#pragma warning restore CA1707
         {
             // Arrange
             var postCode = "a postcode";
@@ -37,9 +33,7 @@ namespace HousingManagementSystemApi.Tests.ModelsTests
         }
 
         [Fact]
-#pragma warning disable CA1707
         public void GivenUniversalHousingAddressWithAddressOnly_WhenConvertingToHactPropertyAddress_ThenPropertyAddressShouldOnlyContainAddress()
-#pragma warning restore CA1707
         {
             // Arrange
             var address = "an address";
@@ -52,9 +46,7 @@ namespace HousingManagementSystemApi.Tests.ModelsTests
         }
 
         [Fact]
-#pragma warning disable CA1707
         public void GivenUniversalHousingAddressWithPostDesigOnly_WhenConvertingToHactPropertyAddress_ThenPropertyAddressShouldOnlyContainBuildingNumber()
-#pragma warning restore CA1707
         {
             // Arrange
             var doorNumber = "a door number";

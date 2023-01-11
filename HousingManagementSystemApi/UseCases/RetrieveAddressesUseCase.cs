@@ -7,10 +7,6 @@ using HousingManagementSystemApi.Gateways;
 namespace HousingManagementSystemApi.UseCases
 {
     using System.Linq;
-    using System.Reflection.Metadata.Ecma335;
-    using Amazon.Runtime.Internal.Util;
-    using Hackney.Shared.Asset.Domain;
-    using Hackney.Shared.Tenure.Domain;
     using Microsoft.Extensions.Logging;
 
     public class RetrieveAddressesUseCase : IRetrieveAddressesUseCase
