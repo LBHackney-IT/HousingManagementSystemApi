@@ -34,7 +34,7 @@ public class AssetGateway : IAssetGateway
         var data = new AssetResponseObject();
         if (response.StatusCode == HttpStatusCode.OK)
         {
-            this.logger.LogInformation("Received status code 200 from Asset API, when attempting to retrieve asset for assetId {AssetId}", assetId);
+            _logger.LogInformation("Received status code 200 from Asset API, when attempting to retrieve asset for assetId {AssetId}", assetId);
             data = await response.Content.ReadFromJsonAsync<AssetResponseObject>();
         }
 
