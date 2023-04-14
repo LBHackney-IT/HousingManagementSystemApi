@@ -51,20 +51,20 @@ namespace HousingManagementSystemApi.UseCases
 
             if (asset == null)
             {
-                _logger.LogInformation("The asset with property ID {Id} cannot be found", propertyId);
+                _logger.LogInformation("The asset with property ID {PropertyId} cannot be found", propertyId);
                 return new PropertyEligibilityResult(false, $"The asset with property ID {propertyId} cannot be found");
             }
 
             if (!_assetTypes.Contains(asset.AssetType))
             {
-                _logger.LogInformation("The asset with {PropertyId} is not eligible because of the asset type", propertyId);
+                _logger.LogInformation("The asset with property ID {PropertyId} is not eligible because of the asset type", propertyId);
                 return new PropertyEligibilityResult(false, $"The asset with {propertyId} is not eligible because of the asset type");
             }
 
             if (asset.Tenure == null || asset.Tenure.Id == null)
             {
-                _logger.LogInformation("Tenure or TenureId was null for {PropertyId}", propertyId);
-                return new PropertyEligibilityResult(false, $"The asset with {propertyId} has no valid tenure");
+                _logger.LogInformation("Tenure or TenureId was null for property ID {PropertyId}", propertyId);
+                return new PropertyEligibilityResult(false, $"The asset with property ID {propertyId} has no valid tenure");
             }
 
             var tenureInformation = await _tenureGateway.RetrieveTenureType(asset?.Tenure?.Id);
@@ -79,7 +79,7 @@ namespace HousingManagementSystemApi.UseCases
             if (!EligibleTenureCodes.Contains(tenureTypeCode))
             {
                 _logger.LogInformation("TenureTypeCode for asset with property ID {PropertyId} is not suitable for Online Repairs", propertyId);
-                return new PropertyEligibilityResult(false, $"Tenure type for property {propertyId} is not suitable for Online Repairs");
+                return new PropertyEligibilityResult(false, $"Tenure type for property ID {propertyId} is not suitable for Online Repairs");
             }
 
             return new PropertyEligibilityResult(true, "The property is valid");
