@@ -38,7 +38,7 @@ namespace HousingManagementSystemApi.Tests.GatewaysTests
 
             var httpClientFactory = new Mock<IHttpClientFactory>();
             httpClientFactory.Setup(x => x.CreateClient(It.IsAny<string>())).Returns(httpClient);
-            systemUnderTest = new AssetGateway(httpClientFactory.Object, new NullLogger<AssetGateway>());
+            _systemUnderTest = new AssetGateway(httpClientFactory.Object, new NullLogger<AssetGateway>());
         }
 
         [Theory]
