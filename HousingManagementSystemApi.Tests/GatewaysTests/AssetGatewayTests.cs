@@ -7,6 +7,7 @@ namespace HousingManagementSystemApi.Tests.GatewaysTests
     using FluentAssertions;
     using Gateways;
     using Hackney.Shared.Asset.Boundary.Response;
+    using Microsoft.Extensions.Logging.Abstractions;
     using Moq;
     using RichardSzalay.MockHttp;
     using Xunit;
@@ -37,7 +38,7 @@ namespace HousingManagementSystemApi.Tests.GatewaysTests
 
             var httpClientFactory = new Mock<IHttpClientFactory>();
             httpClientFactory.Setup(x => x.CreateClient(It.IsAny<string>())).Returns(httpClient);
-            _systemUnderTest = new AssetGateway(httpClientFactory.Object);
+            _systemUnderTest = new AssetGateway(httpClientFactory.Object, new NullLogger<AssetGateway>());
         }
 
         [Theory]
