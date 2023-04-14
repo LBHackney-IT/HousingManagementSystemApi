@@ -19,7 +19,7 @@ namespace HousingManagementSystemApi
     public class Startup
     {
         private const string HousingManagementSystemApiIssuerId = "Housing Management System Api";
-        public static IEnumerable<AssetType> EligibleAssetTypes = new[]
+        public static readonly IEnumerable<AssetType> EligibleAssetTypes = new[]
         {
             AssetType.Flat, AssetType.House, AssetType.Dwelling, AssetType.StudioFlat, AssetType.SelfContainedBedsit
         };
@@ -66,8 +66,8 @@ namespace HousingManagementSystemApi
 
             services.AddTransient<ITenureGateway, TenureGateway>();
             services.AddTransient<IAssetGateway, AssetGateway>();
-            services.AddTransient<IAddressesGateway, PropertiesGateway>();
-            // services.AddTransient<IAddressesGateway, HousingSearchGateway>();
+            //services.AddTransient<IAddressesGateway, PropertiesGateway>();
+            services.AddTransient<IAddressesGateway, HousingSearchGateway>();
 
             services.AddSwaggerGen(c =>
             {

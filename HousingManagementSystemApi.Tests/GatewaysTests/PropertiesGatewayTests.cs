@@ -60,9 +60,7 @@ namespace HousingManagementSystemApi.Tests.GatewaysTests
         [Theory]
         [MemberData(nameof(InvalidArgumentTestData))]
 #pragma warning disable xUnit1026
-#pragma warning disable CA1707
         public async void GivenInvalidPostcodeArgument_WhenSearchingForPostcode_ThenAnExceptionIsThrown<T>(T exception, string postcode) where T : Exception
-#pragma warning restore CA1707
 #pragma warning restore xUnit1026
         {
             // Arrange
@@ -82,9 +80,7 @@ namespace HousingManagementSystemApi.Tests.GatewaysTests
         }
 
         [Fact]
-#pragma warning disable CA1707
         public async void GivenValidPostcodeArgument_WhenSearchingForPostcode_ThenNoExceptionIsThrown()
-#pragma warning restore CA1707
         {
             // Arrange
 
@@ -96,9 +92,7 @@ namespace HousingManagementSystemApi.Tests.GatewaysTests
         }
 
         [Fact]
-#pragma warning disable CA1707
         public async void GivenValidPostcodeArgument_WhenSearchingForPostcode_ThenAddressesAreRetrievedFromApi()
-#pragma warning restore CA1707
         {
             // Arrange
 
@@ -110,9 +104,7 @@ namespace HousingManagementSystemApi.Tests.GatewaysTests
         }
 
         [Fact]
-#pragma warning disable CA1707
         public async void GivenNoPropertyInApiResponse_WhenSearchingForPostcode_ThenNoAddressesAreReturned()
-#pragma warning restore CA1707
         {
             // Arrange
 
@@ -124,9 +116,7 @@ namespace HousingManagementSystemApi.Tests.GatewaysTests
         }
 
         [Fact]
-#pragma warning disable CA1707
         public async void GivenASinglePropertyInApiResponse_WhenSearchingForPostcode_ThenASingleAddressIsReturned()
-#pragma warning restore CA1707
         {
             // Arrange
 
@@ -138,9 +128,7 @@ namespace HousingManagementSystemApi.Tests.GatewaysTests
         }
 
         [Fact]
-#pragma warning disable CA1707
         public async void GivenMultiplePropertiesInApiResponse_WhenSearchingForPostcode_ThenMultipleAddressesAreReturned()
-#pragma warning restore CA1707
         {
             // Arrange
             mockHttp.When($"*properties").WithQueryString("postcode", PostcodeMultipleAddresses)

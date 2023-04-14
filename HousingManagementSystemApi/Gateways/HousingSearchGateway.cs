@@ -25,7 +25,7 @@ namespace HousingManagementSystemApi.Gateways
 
             var httpClient = httpClientFactory.CreateClient(HttpClientNames.HousingSearch);
             var request = new HttpRequestMessage(HttpMethod.Get,
-                $"search/assets?searchText={postcode}&pageSize=100");
+                $"search/assets?searchText={postcode}&useCustomSorting=true");
             var response = await httpClient.SendAsync(request);
 
             var data = new HousingSearchApiResponse();

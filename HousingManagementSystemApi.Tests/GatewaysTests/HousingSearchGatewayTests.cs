@@ -14,10 +14,10 @@ namespace HousingManagementSystemApi.Tests.GatewaysTests
     public class HousingSearchGatewayTests
     {
         private const string Postcode = "M3 OW";
-        private Mock<IHttpClientFactory> httpClientFactory;
-        private readonly HousingSearchGateway systemUnderTest;
+        private readonly Mock<IHttpClientFactory> _httpClientFactory;
+        private readonly HousingSearchGateway _systemUnderTest;
 
-        private string addressSearchResponse = @"{
+        private readonly string addressSearchResponse = @"{
   ""results"": {
     ""assets"": [
       {
@@ -48,35 +48,33 @@ namespace HousingManagementSystemApi.Tests.GatewaysTests
   ""total"": 1
 }";
 
-        private MockHttpMessageHandler mockHttp;
+        private readonly MockHttpMessageHandler _mockHttp;
 
         public HousingSearchGatewayTests()
         {
-            mockHttp = new MockHttpMessageHandler();
+            _mockHttp = new MockHttpMessageHandler();
 
-            mockHttp.When($"*search/assets").WithQueryString("searchText", Postcode)
+            _mockHttp.When($"*search/assets").WithQueryString("searchText", Postcode)
                 .Respond("application/json", addressSearchResponse);
 
-            var httpClient = mockHttp.ToHttpClient();
+            var httpClient = _mockHttp.ToHttpClient();
             httpClient.BaseAddress = new Uri("http://localhost/");
 
-            httpClientFactory = new Mock<IHttpClientFactory>();
-            httpClientFactory.Setup(x => x.CreateClient(It.IsAny<string>())).Returns(httpClient);
-            systemUnderTest = new HousingSearchGateway(httpClientFactory.Object);
+            _httpClientFactory = new Mock<IHttpClientFactory>();
+            _httpClientFactory.Setup(x => x.CreateClient(It.IsAny<string>())).Returns(httpClient);
+            _systemUnderTest = new HousingSearchGateway(_httpClientFactory.Object);
         }
 
         [Theory]
         [MemberData(nameof(InvalidArgumentTestData))]
 #pragma warning disable xUnit1026
-#pragma warning disable CA1707
         public async void GivenInvalidPostcodeArgument_WhenSearchingForPostcode_ThenAnExceptionIsThrown<T>(T exception, string postcode) where T : Exception
-#pragma warning restore CA1707
 #pragma warning restore xUnit1026
         {
             // Arrange
 
             // Act
-            Func<Task> act = async () => await systemUnderTest.SearchByPostcode(postcode);
+            Func<Task> act = async () => await _systemUnderTest.SearchByPostcode(postcode);
 
             // Assert
             await act.Should().ThrowExactlyAsync<T>();
@@ -90,28 +88,24 @@ namespace HousingManagementSystemApi.Tests.GatewaysTests
         }
 
         [Fact]
-#pragma warning disable CA1707
         public async void GivenValidPostcodeArgument_WhenSearchingForPostcode_ThenNoExceptionIsThrown()
-#pragma warning restore CA1707
         {
             // Arrange
 
             // Act
-            Func<Task> act = async () => await systemUnderTest.SearchByPostcode(Postcode);
+            Func<Task> act = async () => await _systemUnderTest.SearchByPostcode(Postcode);
 
             // Assert
             await act.Should().NotThrowAsync();
         }
 
         [Fact]
-#pragma warning disable CA1707
         public async void GivenValidPostcodeArgument_WhenSearchingForPostcode_ThenAddressesAreRetrievedFromApi()
-#pragma warning restore CA1707
         {
             // Arrange
 
             // Act
-            var results = await this.systemUnderTest.SearchByPostcode(Postcode);
+            var results = await _systemUnderTest.SearchByPostcode(Postcode);
 
             // Assert
             Assert.True(results.Any());

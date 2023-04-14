@@ -8,18 +8,18 @@ namespace HousingManagementSystemApi.Gateways
 
     public class AddressesDatabaseGateway : IAddressesGateway
     {
-        private readonly IAddressesRepository addressesRepository;
+        private readonly IAddressesRepository _addressesRepository;
 
         public AddressesDatabaseGateway(IAddressesRepository addressesRepository)
         {
-            this.addressesRepository = addressesRepository;
+            _addressesRepository = addressesRepository;
         }
 
         public Task<IEnumerable<PropertyAddress>> SearchByPostcode(string postcode)
         {
             Guard.Against.NullOrWhiteSpace(postcode, nameof(postcode));
 
-            return addressesRepository.GetAddressesByPostcode(postcode);
+            return _addressesRepository.GetAddressesByPostcode(postcode);
         }
     }
 }

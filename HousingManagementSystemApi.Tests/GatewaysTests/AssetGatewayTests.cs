@@ -15,10 +15,10 @@ namespace HousingManagementSystemApi.Tests.GatewaysTests
     public class AssetGatewayTests
     {
         public const string AssetId = "AssetId";
-        private readonly AssetGateway systemUnderTest;
-        private MockHttpMessageHandler mockHttp;
+        private readonly AssetGateway _systemUnderTest;
+        private readonly MockHttpMessageHandler _mockHttp;
 
-        private string assetResponse =
+        private readonly string _assetResponse =
             "{\"id\":\"c7f39282-2505-f0fb-fbe3-d4ae3c8b7097\"," +
             "\"assetId\":\"AssetId\"," +
             "\"assetType\":\"Dwelling\"," +
@@ -28,12 +28,12 @@ namespace HousingManagementSystemApi.Tests.GatewaysTests
 
         public AssetGatewayTests()
         {
-            mockHttp = new MockHttpMessageHandler();
+            _mockHttp = new MockHttpMessageHandler();
 
-            mockHttp.When($"*assets/assetId/{AssetId}")
-                .Respond("application/json", assetResponse);
+            _mockHttp.When($"*assets/assetId/{AssetId}")
+                .Respond("application/json", _assetResponse);
 
-            var httpClient = mockHttp.ToHttpClient();
+            var httpClient = _mockHttp.ToHttpClient();
             httpClient.BaseAddress = new Uri("http://localhost/");
 
             var httpClientFactory = new Mock<IHttpClientFactory>();
@@ -44,15 +44,13 @@ namespace HousingManagementSystemApi.Tests.GatewaysTests
         [Theory]
         [MemberData(nameof(InvalidArgumentTestData))]
 #pragma warning disable xUnit1026
-#pragma warning disable CA1707
         public async void GivenInvalidAssetIdArgument_WhenRetrievingAnAsset_ThenAnExceptionIsThrown<T>(T exception, string assetId) where T : Exception
-#pragma warning restore CA1707
 #pragma warning restore xUnit1026
         {
             // Arrange
 
             // Act
-            Func<Task> act = async () => await systemUnderTest.RetrieveAsset(assetId);
+            Func<Task> act = async () => await _systemUnderTest.RetrieveAsset(assetId);
 
             // Assert
             await act.Should().ThrowExactlyAsync<T>();
@@ -66,42 +64,36 @@ namespace HousingManagementSystemApi.Tests.GatewaysTests
         }
 
         [Fact]
-#pragma warning disable CA1707
         public async void GivenAnAssetIdArgument_WhenRetrievingAnAsset_ThenNoExceptionIsThrown()
-#pragma warning restore CA1707
         {
             // Arrange
 
             // Act
-            Func<Task> act = async () => await systemUnderTest.RetrieveAsset(AssetId);
+            Func<Task> act = async () => await _systemUnderTest.RetrieveAsset(AssetId);
 
             // Assert
             await act.Should().NotThrowAsync();
         }
 
         [Fact]
-#pragma warning disable CA1707
         public async void GivenAnAssetId_WhenRetrievingAnAsset_ThenAddressesAreRetrievedFromApi()
-#pragma warning restore CA1707
         {
             // Arrange
 
             // Act
-            var results = await systemUnderTest.RetrieveAsset(AssetId);
+            var results = await _systemUnderTest.RetrieveAsset(AssetId);
 
             // Assert
             results.AssetId.Should().Be(AssetId);
         }
 
         [Fact]
-#pragma warning disable CA1707
         public async void GivenNoAssetInApiResponse_WhenRetrievingAnAsset_ThenNoAssetIsReturned()
-#pragma warning restore CA1707
         {
             // Arrange
 
             // Act
-            var results = await systemUnderTest.RetrieveAsset("random");
+            var results = await _systemUnderTest.RetrieveAsset("random");
 
             // Assert
             results.AssetId.Should().BeNull();

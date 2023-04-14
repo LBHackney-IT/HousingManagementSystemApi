@@ -26,7 +26,7 @@ public class AssetGateway : IAssetGateway
 
         Guard.Against.NullOrWhiteSpace(assetId, nameof(assetId));
 
-        var httpClient = httpClientFactory.CreateClient(HttpClientNames.Asset);
+        var httpClient = _httpClientFactory.CreateClient(HttpClientNames.Asset);
         var request = new HttpRequestMessage(HttpMethod.Get,
             $"assets/assetId/{assetId}");
         var response = await httpClient.SendAsync(request);

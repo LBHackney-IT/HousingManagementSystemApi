@@ -1,6 +1,5 @@
 version: 2.1
 
-
 orbs:
   aws-ecr: circleci/aws-ecr@3.0.0
   aws-cli: circleci/aws-cli@0.1.9
@@ -134,29 +133,28 @@ jobs:
           aws-account: $AWS_ACCOUNT_PRODUCTION
 
 workflows:
-  check-and-deploy-development:
+  # check-and-deploy-development:
+  #   jobs:
+  #     - check-code-formatting:
+  #         context: api-nuget-token-context
+  #     - build-and-test:
+  #         context: api-nuget-token-context
+  #     - assume-role-development:
+  #         context: api-assume-role-housing-development-context
+  #         requires:
+  #           - build-and-test
+  #         filters:
+  #           branches:
+  #             only: development
+  #     - deploy-to-development:
+  #         requires:
+  #           - assume-role-development
+  check-and-deploy-staging-and-production:
     jobs:
       - check-code-formatting:
           context: api-nuget-token-context
       - build-and-test:
           context: api-nuget-token-context
-      - assume-role-development:
-          context: api-assume-role-housing-development-context
-          requires:
-            - build-and-test
-          filters:
-            branches:
-              only: development
-      - deploy-to-development:
-          requires:
-            - assume-role-development
-  check-and-deploy-staging-and-production:
-    jobs:
-      - build-and-test:
-          context: api-nuget-token-context
-          filters:
-            branches:
-              only: main
       - assume-role-staging:
           context: api-assume-role-housing-staging-context
           requires:
