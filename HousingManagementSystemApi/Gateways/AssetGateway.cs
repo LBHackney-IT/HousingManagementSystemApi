@@ -10,19 +10,19 @@ using Microsoft.Extensions.Logging;
 
 public class AssetGateway : IAssetGateway
 {
-    private readonly IHttpClientFactory httpClientFactory;
-    private readonly ILogger<AssetGateway> logger;
+    private readonly IHttpClientFactory _httpClientFactory;
+    private readonly ILogger<AssetGateway> _logger;
 
 
     public AssetGateway(IHttpClientFactory httpClientFactory, ILogger<AssetGateway> logger)
     {
-        this.httpClientFactory = httpClientFactory;
-        this.logger = logger;
+        _httpClientFactory = httpClientFactory;
+        _logger = logger;
     }
 
     public async Task<AssetResponseObject> RetrieveAsset(string assetId)
     {
-        this.logger.LogInformation("Calling Asset API to retrieve asset for assetId {AssetId}", assetId);
+        _logger.LogInformation("Calling Asset API to retrieve asset for assetId {AssetId}", assetId);
 
         Guard.Against.NullOrWhiteSpace(assetId, nameof(assetId));
 
