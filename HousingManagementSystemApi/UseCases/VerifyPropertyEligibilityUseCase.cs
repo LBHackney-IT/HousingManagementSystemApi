@@ -41,12 +41,6 @@ namespace HousingManagementSystemApi.UseCases
         {
             _logger.LogInformation("Calling VerifyPropertyEligibilityUseCase for {PropertyId}", propertyId);
 
-            if (string.IsNullOrEmpty(propertyId))
-            {
-                _logger.LogInformation("The property ID {PropertyId} was null or empty. Throwing Exception", propertyId);
-                throw new ArgumentNullException(nameof(propertyId));
-            }
-
             var asset = await _assetGateway.RetrieveAsset(propertyId);
 
             if (asset == null)
