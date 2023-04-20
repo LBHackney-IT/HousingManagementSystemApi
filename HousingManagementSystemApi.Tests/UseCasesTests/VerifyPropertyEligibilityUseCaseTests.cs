@@ -38,16 +38,6 @@ namespace HousingManagementSystemApi.Tests.UseCasesTests
         }
 
         [Fact]
-        public async Task GivenANullPropertyId_WhenUseCaseIsExecuted_ThenAnExceptionShouldBeThrown()
-        {
-            // Act
-            var action = async () => await _sut.Execute(null);
-
-            // Assert
-            await Assert.ThrowsAsync<ArgumentNullException>(action);
-        }
-
-        [Fact]
         public async Task GivenAssetCannotBeFound_WhenUseCaseIsExecuted_ThenThereWillBeAFailureResult()
         {
             // Arrange

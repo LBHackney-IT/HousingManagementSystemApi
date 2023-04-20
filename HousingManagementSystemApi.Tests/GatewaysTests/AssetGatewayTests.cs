@@ -41,30 +41,8 @@ namespace HousingManagementSystemApi.Tests.GatewaysTests
             _systemUnderTest = new AssetGateway(httpClientFactory.Object, new NullLogger<AssetGateway>());
         }
 
-        [Theory]
-        [MemberData(nameof(InvalidArgumentTestData))]
-#pragma warning disable xUnit1026
-        public async void GivenInvalidAssetIdArgument_WhenRetrievingAnAsset_ThenAnExceptionIsThrown<T>(T exception, string assetId) where T : Exception
-#pragma warning restore xUnit1026
-        {
-            // Arrange
-
-            // Act
-            Func<Task> act = async () => await _systemUnderTest.RetrieveAsset(assetId);
-
-            // Assert
-            await act.Should().ThrowExactlyAsync<T>();
-        }
-
-        public static IEnumerable<object[]> InvalidArgumentTestData()
-        {
-            yield return new object[] { new ArgumentNullException(), null };
-            yield return new object[] { new ArgumentException(), "" };
-            yield return new object[] { new ArgumentException(), " " };
-        }
-
         [Fact]
-        public async void GivenAnAssetIdArgument_WhenRetrievingAnAsset_ThenNoExceptionIsThrown()
+        public async Task GivenAnAssetIdArgument_WhenRetrievingAnAsset_ThenNoExceptionIsThrown()
         {
             // Arrange
 
@@ -76,7 +54,7 @@ namespace HousingManagementSystemApi.Tests.GatewaysTests
         }
 
         [Fact]
-        public async void GivenAnAssetId_WhenRetrievingAnAsset_ThenAddressesAreRetrievedFromApi()
+        public async Task GivenAnAssetId_WhenRetrievingAnAsset_ThenAddressesAreRetrievedFromApi()
         {
             // Arrange
 
@@ -88,16 +66,15 @@ namespace HousingManagementSystemApi.Tests.GatewaysTests
         }
 
         [Fact]
-        public async void GivenNoAssetInApiResponse_WhenRetrievingAnAsset_ThenNoAssetIsReturned()
+        public async Task GivenNoAssetInApiResponse_WhenRetrievingAnAsset_ThenNoAssetIsReturned()
         {
             // Arrange
 
             // Act
-            var results = await _systemUnderTest.RetrieveAsset("random");
+            var response = await _systemUnderTest.RetrieveAsset("random");
 
             // Assert
-            results.AssetId.Should().BeNull();
-            results.Should().BeOfType(typeof(AssetResponseObject));
+            response.Should().BeNull();
         }
     }
 

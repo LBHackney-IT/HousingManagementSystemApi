@@ -36,11 +36,33 @@ namespace HousingManagementSystemApi.Tests.ContollersTests
         [Fact]
         public async Task GivenAPropertyId_WhenAValidRequestIsMade_ItReturnsASuccessfullResponse()
         {
+            // Arrange
             SetupValidDummyPropertyEligibilityResult();
 
+            // Act
             var result = await _systemUnderTest.VerifyPropertyEligibility(_propertyId);
+
+            // Assert
             _verifyPropertyEligibilityUseCase.Verify(x => x.Execute(_propertyId), Times.Once);
             GetStatusCode(result).Should().Be(200);
+        }
+
+        [Theory]
+        [InlineData("")]
+        [InlineData("     ")]
+        [InlineData(null)]
+        public async Task GivenAnInvalidPropertyId_ReturnsBadRequest(string emptyPropertyId)
+        {
+            // Arrange
+
+            // Act
+            var result = await _systemUnderTest.VerifyPropertyEligibility(emptyPropertyId);
+
+            // Assert
+            _verifyPropertyEligibilityUseCase
+                .Verify(x => x.Execute(It.IsAny<string>()), Times.Never);
+
+            GetStatusCode(result).Should().Be(400);
         }
 
         [Fact]

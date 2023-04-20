@@ -27,6 +27,11 @@ namespace HousingManagementSystemApi.Controllers
         {
             _logger.LogInformation($"Verifying property eligibility for property {propertyId}");
 
+            if (string.IsNullOrWhiteSpace(propertyId))
+            {
+                return BadRequest($"The parameter {nameof(propertyId)} cannot be empty");
+            }
+
             try
             {
                 var result = await _verifyPropertyEligibilityUseCase.Execute(propertyId);
