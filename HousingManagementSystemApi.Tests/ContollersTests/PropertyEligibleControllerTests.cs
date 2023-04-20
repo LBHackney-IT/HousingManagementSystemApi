@@ -47,14 +47,16 @@ namespace HousingManagementSystemApi.Tests.ContollersTests
             GetStatusCode(result).Should().Be(200);
         }
 
-        [Fact]
-        public async Task GivenAnInvalidPropertyId_ReturnsBadRequest()
+        [Theory]
+        [InlineData("")]
+        [InlineData("     ")]
+        [InlineData(null)]
+        public async Task GivenAnInvalidPropertyId_ReturnsBadRequest(string emptyPropertyId)
         {
             // Arrange
-            var invalidPropertyId = "";
 
             // Act
-            var result = await _systemUnderTest.VerifyPropertyEligibility(invalidPropertyId);
+            var result = await _systemUnderTest.VerifyPropertyEligibility(emptyPropertyId);
 
             // Assert
             _verifyPropertyEligibilityUseCase
