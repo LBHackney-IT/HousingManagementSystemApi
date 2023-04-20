@@ -25,8 +25,6 @@ public class AssetGateway : IAssetGateway
     {
         _logger.LogInformation("Calling Asset API to retrieve asset for assetId {AssetId}", assetId);
 
-        Guard.Against.NullOrWhiteSpace(assetId, nameof(assetId));
-
         var httpClient = _httpClientFactory.CreateClient(HttpClientNames.Asset);
         var request = new HttpRequestMessage(HttpMethod.Get, $"assets/assetId/{assetId}");
         var response = await httpClient.SendAsync(request);

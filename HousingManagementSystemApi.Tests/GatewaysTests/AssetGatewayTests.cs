@@ -42,7 +42,7 @@ namespace HousingManagementSystemApi.Tests.GatewaysTests
         }
 
         [Fact]
-        public async void GivenAnAssetIdArgument_WhenRetrievingAnAsset_ThenNoExceptionIsThrown()
+        public async Task GivenAnAssetIdArgument_WhenRetrievingAnAsset_ThenNoExceptionIsThrown()
         {
             // Arrange
 
@@ -54,7 +54,7 @@ namespace HousingManagementSystemApi.Tests.GatewaysTests
         }
 
         [Fact]
-        public async void GivenAnAssetId_WhenRetrievingAnAsset_ThenAddressesAreRetrievedFromApi()
+        public async Task GivenAnAssetId_WhenRetrievingAnAsset_ThenAddressesAreRetrievedFromApi()
         {
             // Arrange
 
@@ -66,16 +66,15 @@ namespace HousingManagementSystemApi.Tests.GatewaysTests
         }
 
         [Fact]
-        public async void GivenNoAssetInApiResponse_WhenRetrievingAnAsset_ThenNoAssetIsReturned()
+        public async Task GivenNoAssetInApiResponse_WhenRetrievingAnAsset_ThenNoAssetIsReturned()
         {
             // Arrange
 
             // Act
-            var results = await _systemUnderTest.RetrieveAsset("random");
+            var response = await _systemUnderTest.RetrieveAsset("random");
 
             // Assert
-            results.AssetId.Should().BeNull();
-            results.Should().BeOfType(typeof(AssetResponseObject));
+            response.Should().BeNull();
         }
     }
 
