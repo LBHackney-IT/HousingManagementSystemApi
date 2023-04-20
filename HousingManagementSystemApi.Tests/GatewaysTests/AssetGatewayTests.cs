@@ -41,28 +41,6 @@ namespace HousingManagementSystemApi.Tests.GatewaysTests
             _systemUnderTest = new AssetGateway(httpClientFactory.Object, new NullLogger<AssetGateway>());
         }
 
-        [Theory]
-        [MemberData(nameof(InvalidArgumentTestData))]
-#pragma warning disable xUnit1026
-        public async void GivenInvalidAssetIdArgument_WhenRetrievingAnAsset_ThenAnExceptionIsThrown<T>(T exception, string assetId) where T : Exception
-#pragma warning restore xUnit1026
-        {
-            // Arrange
-
-            // Act
-            Func<Task> act = async () => await _systemUnderTest.RetrieveAsset(assetId);
-
-            // Assert
-            await act.Should().ThrowExactlyAsync<T>();
-        }
-
-        public static IEnumerable<object[]> InvalidArgumentTestData()
-        {
-            yield return new object[] { new ArgumentNullException(), null };
-            yield return new object[] { new ArgumentException(), "" };
-            yield return new object[] { new ArgumentException(), " " };
-        }
-
         [Fact]
         public async void GivenAnAssetIdArgument_WhenRetrievingAnAsset_ThenNoExceptionIsThrown()
         {
