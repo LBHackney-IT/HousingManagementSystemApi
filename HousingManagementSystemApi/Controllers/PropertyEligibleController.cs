@@ -34,6 +34,7 @@ namespace HousingManagementSystemApi.Controllers
             }
             catch (Exception e)
             {
+                _logger.LogInformation("An error occured calling VerifyPropertyEligibilityUseCase with the {Error}", e);
                 SentrySdk.CaptureException(e);
                 return StatusCode(500, e.Message);
             }
