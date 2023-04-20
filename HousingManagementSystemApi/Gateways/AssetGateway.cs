@@ -6,6 +6,7 @@ using System.Net.Http.Json;
 using System.Threading.Tasks;
 using Ardalis.GuardClauses;
 using Hackney.Shared.Asset.Boundary.Response;
+using HousingManagementSystemApi.Exceptions;
 using Microsoft.Extensions.Logging;
 
 public class AssetGateway : IAssetGateway
@@ -27,17 +28,21 @@ public class AssetGateway : IAssetGateway
         Guard.Against.NullOrWhiteSpace(assetId, nameof(assetId));
 
         var httpClient = _httpClientFactory.CreateClient(HttpClientNames.Asset);
-        var request = new HttpRequestMessage(HttpMethod.Get,
-            $"assets/assetId/{assetId}");
+        var request = new HttpRequestMessage(HttpMethod.Get, $"assets/assetId/{assetId}");
         var response = await httpClient.SendAsync(request);
 
-        var data = new AssetResponseObject();
-        if (response.StatusCode == HttpStatusCode.OK)
+        _logger.LogInformation("Received {StatusCode} from Asset API, when attempting to retrieve asset for assetId {AssetId}", response.StatusCode, assetId);
+
+        if (response.StatusCode == HttpStatusCode.NotFound)
         {
-            _logger.LogInformation("Received status code 200 from Asset API, when attempting to retrieve asset for assetId {AssetId}", assetId);
-            data = await response.Content.ReadFromJsonAsync<AssetResponseObject>();
+            return null;
         }
 
-        return data;
+        if (response.StatusCode != HttpStatusCode.OK)
+        {
+            throw new ApiException(response.StatusCode);
+        }
+
+        return await response.Content.ReadFromJsonAsync<AssetResponseObject>();
     }
 }
