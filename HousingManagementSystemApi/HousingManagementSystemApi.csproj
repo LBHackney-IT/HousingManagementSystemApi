@@ -10,7 +10,7 @@
     <PackageReference Include="Dapper" Version="2.0.123" />
     <PackageReference Include="Hackney.HousingRepairsOnline.Authentication" Version="1.2.0" />
     <PackageReference Include="Hackney.HACT.Dtos" Version="1.1.1" />
-    <PackageReference Include="Hackney.Shared.Asset" Version="0.34.0" />
+    <PackageReference Include="Hackney.Shared.Asset" Version="0.36.0" />
     <PackageReference Include="Hackney.Shared.Tenure" Version="0.21.0" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Versioning" Version="5.0.0" />
     <PackageReference Include="Moq.Dapper" Version="1.0.4" />
