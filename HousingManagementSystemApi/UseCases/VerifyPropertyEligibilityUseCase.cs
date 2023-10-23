@@ -20,6 +20,7 @@ namespace HousingManagementSystemApi.UseCases
         private readonly IEnumerable<AssetType> _assetTypes;
         private readonly ITenureGateway _tenureGateway;
         private readonly ILogger<VerifyPropertyEligibilityUseCase> _logger;
+        private readonly IRepairsHubAlertsGateway _repairsHubAlertGateway;
 
         private IEnumerable<string> EligibleTenureCodes { get; }
 
@@ -28,13 +29,15 @@ namespace HousingManagementSystemApi.UseCases
             IEnumerable<AssetType> assetTypes,
             ITenureGateway tenureGateway,
             IEnumerable<TenureType> eligibleTenureTypes,
-            ILogger<VerifyPropertyEligibilityUseCase> logger)
+            ILogger<VerifyPropertyEligibilityUseCase> logger,
+            IRepairsHubAlertsGateway repairsHubAlertGateway)
         {
             _assetGateway = assetGateway;
             _assetTypes = assetTypes;
             _tenureGateway = tenureGateway;
             EligibleTenureCodes = eligibleTenureTypes.Select(x => x.Code);
             _logger = logger;
+            _repairsHubAlertGateway = repairsHubAlertGateway;
         }
 
         public async Task<PropertyEligibilityResult> Execute(string propertyId)
@@ -88,6 +91,28 @@ namespace HousingManagementSystemApi.UseCases
                 _logger.LogInformation("TenureTypeCode for asset with property ID {PropertyId} is not suitable for Online Repairs", propertyId);
                 return new PropertyEligibilityResult(false, $"Tenure type for property ID {propertyId} is not suitable for Online Repairs");
             }
+
+            _logger.LogInformation("About to get location alerts for: ", propertyId);
+
+            var locationAlerts = await _repairsHubAlertGateway.GetLocationAlerts(propertyId);
+
+            if (locationAlerts.Alerts.Any())
+            {
+                var locationFailureText = $"Property {propertyId} is not eligable for RHOL due to having {locationAlerts.Alerts.Count} active Location Alert(s)";
+                _logger.LogInformation(locationFailureText);
+                return new PropertyEligibilityResult(false, locationFailureText);
+            }
+
+            //_logger.LogInformation("About to get person alerts for: ", asset?.Tenure?.Id);
+
+            //var personAlerts = await _repairsHubAlertGateway.GetPersonAlerts(asset?.Tenure?.Id);
+
+            //if (personAlerts.Alerts.Any())
+            //{
+            //    var personFailureText = $"Tenure {asset?.Tenure?.Id} is not eligable for RHOL due to having {personAlerts.Alerts.Count} active Person Alert(s)";
+            //    _logger.LogInformation(personFailureText);
+            //    return new PropertyEligibilityResult(false, personFailureText);
+            //}
 
             return new PropertyEligibilityResult(true, "The property is valid");
         }
