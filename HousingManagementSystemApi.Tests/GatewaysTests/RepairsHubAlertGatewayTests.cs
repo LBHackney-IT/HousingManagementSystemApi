@@ -35,7 +35,7 @@ namespace HousingManagementSystemApi.Tests.GatewaysTests
         {
             _mockHttp = new MockHttpMessageHandler();
 
-            _mockHttp.When($"location-alerts")
+            _mockHttp.When($"*location-alerts")
                 .Respond("application/json", _repairsHubAlertResponse);
 
             var httpClient = _mockHttp.ToHttpClient();
@@ -48,7 +48,7 @@ namespace HousingManagementSystemApi.Tests.GatewaysTests
 
         [Theory]
         [MemberData(nameof(InvalidArgumentTestData))]
-        public async void GivenAnInvalidPropertyReference_WhenGettingAlerts_ThenAnExceptionIsThrown<T>(T exception, string propRef) where T : Exception
+        public async void GivenAnInvalidPropertyReference_WhenGettingAlerts_ThenAnExceptionIsThrown(string propRef)
         {
             // Arrange
 
@@ -56,14 +56,14 @@ namespace HousingManagementSystemApi.Tests.GatewaysTests
             Func<Task> act = async () => await _systemUnderTest.GetLocationAlerts(propRef);
 
             // Assert
-            await act.Should().ThrowExactlyAsync<T>();
+            await act.Should().ThrowExactlyAsync<ArgumentException>();
         }
 
         public static IEnumerable<object[]> InvalidArgumentTestData()
         {
-            yield return new object[] { new ArgumentNullException(), null };
-            yield return new object[] { new ArgumentException(), "" };
-            yield return new object[] { new ArgumentException(), " " };
+            yield return new object[] { null };
+            yield return new object[] { "" };
+            yield return new object[] { " " };
         }
 
         [Fact]
