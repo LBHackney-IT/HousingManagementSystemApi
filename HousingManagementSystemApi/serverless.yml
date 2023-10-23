@@ -42,6 +42,8 @@ functions:
       HOUSING_ASSET_API_KEY: ${ssm:/HousingManagementSystemApi/${self:provider.stage}/housing-asset-api-key}
       TENURE_INFORMATION_API_URI: ${ssm:/HousingManagementSystemApi/${self:provider.stage}/tenure-information-api-uri}
       TENURE_INFORMATION_API_KEY: ${ssm:/HousingManagementSystemApi/${self:provider.stage}/tenure-information-api-key}
+      REPAIRS_HUB_PROPERTIES_URL: ${ssm:/HousingManagementSystemApi/${self:provider.stage}/repairs-hub-properties-api-uri}
+      REPAIRS_HUB_PROPERTIES_API_KEY: ${ssm:/HousingManagementSystemApi/${self:provider.stage}/repairs-hub-properties-api-key}
     events:
       - http:
           path: /{proxy+}
