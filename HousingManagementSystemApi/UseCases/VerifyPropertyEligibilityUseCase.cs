@@ -103,17 +103,6 @@ namespace HousingManagementSystemApi.UseCases
                 return new PropertyEligibilityResult(false, locationFailureText);
             }
 
-            //_logger.LogInformation("About to get person alerts for: ", asset?.Tenure?.Id);
-
-            //var personAlerts = await _repairsHubAlertGateway.GetPersonAlerts(asset?.Tenure?.Id);
-
-            //if (personAlerts.Alerts.Any())
-            //{
-            //    var personFailureText = $"Tenure {asset?.Tenure?.Id} is not eligable for RHOL due to having {personAlerts.Alerts.Count} active Person Alert(s)";
-            //    _logger.LogInformation(personFailureText);
-            //    return new PropertyEligibilityResult(false, personFailureText);
-            //}
-
             return new PropertyEligibilityResult(true, "The property is valid");
         }
     }

@@ -296,51 +296,5 @@ namespace HousingManagementSystemApi.Tests.UseCasesTests
             Assert.False(result.PropertyEligible);
             Assert.Contains("not eligable for RHOL due to having 1 active Location Alert", result.Reason);
         }
-
-        //[Fact]
-        //public async Task GivenAPropertyWithPersonAlerts_WhenUseCaseIsExecuted_ThenShouldBeAFailureResult()
-        //{
-        //    // Arrange
-        //    const string HouseThatExists = "01234567";
-
-        //    _retrieveAssetGateway.Setup(x => x.RetrieveAsset(HouseThatExists))
-        //        .ReturnsAsync(new AssetResponseObject
-        //        {
-        //            AssetType = AssetType.Dwelling,
-        //            Tenure = new AssetTenureResponseObject
-        //            {
-        //                Id = "TEN001"
-        //            },
-        //            AssetManagement = new AssetManagement
-        //            {
-        //                IsTMOManaged = false,
-        //            }
-        //        });
-
-        //    _tenureGateway.Setup(x => x.RetrieveTenureType("TEN001"))
-        //        .ReturnsAsync(new TenureInformation { TenureType = TenureTypes.Secure });
-
-        //    _alertsGatewayMock.Setup(s => s.GetPersonAlerts(It.IsAny<string>()))
-        //        .ReturnsAsync(new AlertsViewModel
-        //        {
-        //            Alerts = new List<CautionaryAlertViewModel>
-        //            {
-        //                new CautionaryAlertViewModel
-        //                {
-        //                    Type = "VA",
-        //                    Comments = "Violent resident"
-        //                }
-        //            },
-        //            Reference = "TEST REFERENCE"
-        //        });
-        //    ;
-
-        //    // Act
-        //    var result = await _sut.Execute(HouseThatExists);
-
-        //    // Assert
-        //    Assert.False(result.PropertyEligible);
-        //    Assert.Contains("not eligable for RHOL due to having 1 active Person Alert", result.Reason);
-        //}
     }
 }
