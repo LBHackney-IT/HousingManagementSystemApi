@@ -1,12 +1,12 @@
+using System;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Json;
-using System;
 using System.Text.Json;
 using System.Threading.Tasks;
-using HousingManagementSystemApi.Models.RepairsHub;
 using Amazon.Lambda.Core;
+using HousingManagementSystemApi.Models.RepairsHub;
 
 namespace HousingManagementSystemApi.Gateways
 {
@@ -21,7 +21,8 @@ namespace HousingManagementSystemApi.Gateways
 
         public async Task<AlertsViewModel> GetPersonAlerts(string tenancyAgreementReference)
         {
-            if (string.IsNullOrWhiteSpace(tenancyAgreementReference)) throw new ArgumentException(tenancyAgreementReference, nameof(tenancyAgreementReference));
+            if (string.IsNullOrWhiteSpace(tenancyAgreementReference))
+                throw new ArgumentException(tenancyAgreementReference, nameof(tenancyAgreementReference));
 
             LambdaLogger.Log("Starting person alert retrieval for tenancy " + tenancyAgreementReference);
 
