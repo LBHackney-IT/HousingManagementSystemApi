@@ -43,9 +43,6 @@ namespace HousingManagementSystemApi.Tests.UseCasesTests
             _tenureGateway = new Mock<ITenureGateway>();
             _alertsGatewayMock = new Mock<IRepairsHubAlertsGateway>();
 
-            _alertsGatewayMock.Setup(s => s.GetPersonAlerts(It.IsAny<string>()))
-                .ReturnsAsync(noAlerts);
-
             _alertsGatewayMock.Setup(s => s.GetLocationAlerts(It.IsAny<string>()))
                 .ReturnsAsync(noAlerts);
 
