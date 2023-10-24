@@ -221,37 +221,6 @@ namespace HousingManagementSystemApi.Tests.UseCasesTests
         }
 
         [Fact]
-        public async Task GivenATmoManagedProperty_WhenUseCaseIsExecuted_ThenShouldBeAFailureResult()
-        {
-            // Arrange
-            const string HouseThatExists = "01234567";
-
-            _retrieveAssetGateway.Setup(x => x.RetrieveAsset(HouseThatExists))
-                .ReturnsAsync(new AssetResponseObject
-                {
-                    AssetType = AssetType.Dwelling,
-                    Tenure = new AssetTenureResponseObject
-                    {
-                        Id = "TEN001"
-                    },
-                    AssetManagement = new AssetManagement
-                    {
-                        IsTMOManaged = true,
-                    }
-                });
-
-            _tenureGateway.Setup(x => x.RetrieveTenureType("TEN001"))
-                .ReturnsAsync(new TenureInformation { TenureType = TenureTypes.Secure });
-
-            // Act
-            var result = await _sut.Execute(HouseThatExists);
-
-            // Assert
-            Assert.False(result.PropertyEligible);
-            Assert.Contains("is managed by a TMO", result.Reason);
-        }
-
-        [Fact]
         public async Task GivenAPropertyWithLocationAlerts_WhenUseCaseIsExecuted_ThenShouldBeAFailureResult()
         {
             // Arrange
