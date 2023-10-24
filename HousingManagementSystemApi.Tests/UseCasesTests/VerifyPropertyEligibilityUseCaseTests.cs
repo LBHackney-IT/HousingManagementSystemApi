@@ -7,6 +7,7 @@ namespace HousingManagementSystemApi.Tests.UseCasesTests
     using Hackney.Shared.Asset.Domain;
     using Hackney.Shared.Tenure.Domain;
     using HousingManagementSystemApi.Gateways;
+    using HousingManagementSystemApi.Models.RepairsHub;
     using HousingManagementSystemApi.UseCases;
     using Microsoft.Extensions.Logging.Abstractions;
     using Moq;
@@ -17,6 +18,7 @@ namespace HousingManagementSystemApi.Tests.UseCasesTests
         private readonly Mock<IAssetGateway> _retrieveAssetGateway;
         private readonly Mock<ITenureGateway> _tenureGateway;
         private readonly VerifyPropertyEligibilityUseCase _sut;
+        private readonly Mock<IRepairsHubAlertsGateway> _alertsGatewayMock;
 
         public static readonly IEnumerable<AssetType> EligibleAssetTypes = new[]
 {
@@ -30,11 +32,21 @@ namespace HousingManagementSystemApi.Tests.UseCasesTests
             TenureTypes.Freehold
         };
 
+        private readonly AlertsViewModel noAlerts = new()
+        {
+            Alerts = new List<CautionaryAlertViewModel>()
+        };
+
         public VerifyPropertyEligibilityUseCaseTests()
         {
             _retrieveAssetGateway = new Mock<IAssetGateway>();
             _tenureGateway = new Mock<ITenureGateway>();
-            _sut = new VerifyPropertyEligibilityUseCase(_retrieveAssetGateway.Object, EligibleAssetTypes, _tenureGateway.Object, eligibleTenureTypes, new NullLogger<VerifyPropertyEligibilityUseCase>());
+            _alertsGatewayMock = new Mock<IRepairsHubAlertsGateway>();
+
+            _alertsGatewayMock.Setup(s => s.GetLocationAlerts(It.IsAny<string>()))
+                .ReturnsAsync(noAlerts);
+
+            _sut = new VerifyPropertyEligibilityUseCase(_retrieveAssetGateway.Object, EligibleAssetTypes, _tenureGateway.Object, eligibleTenureTypes, new NullLogger<VerifyPropertyEligibilityUseCase>(), _alertsGatewayMock.Object);
         }
 
         [Fact]
@@ -206,7 +218,7 @@ namespace HousingManagementSystemApi.Tests.UseCasesTests
         }
 
         [Fact]
-        public async Task GivenATmoManagedProperty_WhenUseCaseIsExecuted_ThenShouldBeAFailureResult()
+        public async Task GivenAPropertyWithLocationAlerts_WhenUseCaseIsExecuted_ThenShouldBeAFailureResult()
         {
             // Arrange
             const string HouseThatExists = "01234567";
@@ -221,19 +233,34 @@ namespace HousingManagementSystemApi.Tests.UseCasesTests
                     },
                     AssetManagement = new AssetManagement
                     {
-                        IsTMOManaged = true,
+                        IsTMOManaged = false,
                     }
                 });
 
             _tenureGateway.Setup(x => x.RetrieveTenureType("TEN001"))
                 .ReturnsAsync(new TenureInformation { TenureType = TenureTypes.Secure });
 
+            _alertsGatewayMock.Setup(s => s.GetLocationAlerts(It.IsAny<string>()))
+                .ReturnsAsync(new AlertsViewModel
+                {
+                    Alerts = new List<CautionaryAlertViewModel>
+                    {
+                        new CautionaryAlertViewModel
+                        {
+                            Type = "VA",
+                            Comments = "Violent resident"
+                        }
+                    },
+                    Reference = "TEST REFERENCE"
+                });
+            ;
+
             // Act
             var result = await _sut.Execute(HouseThatExists);
 
             // Assert
             Assert.False(result.PropertyEligible);
-            Assert.Contains("is managed by a TMO", result.Reason);
+            Assert.Contains("not eligable for RHOL due to having 1 active Location Alert", result.Reason);
         }
     }
 }
