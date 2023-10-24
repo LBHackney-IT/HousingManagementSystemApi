@@ -34,18 +34,15 @@ namespace HousingManagementSystemApi.Gateways
 
             var response = await _client.SendAsync(request);
 
-            AlertsViewModel alertResult = null;
-
-            if (response.StatusCode == HttpStatusCode.OK)
-            {
-                alertResult = await response.Content.ReadFromJsonAsync<AlertsViewModel>();
-
-                LambdaLogger.Log($"Successfully got {alertResult.Alerts.Count} location alerts for tenancy " + propertyReference);
-            }
-            else
+            if (response.StatusCode != HttpStatusCode.OK)
             {
                 LambdaLogger.Log($"Call to {uri} was unsuccessful with error {response.StatusCode}, reason: {response.ReasonPhrase}");
+                return null;
             }
+
+            var alertResult = await response.Content.ReadFromJsonAsync<AlertsViewModel>();
+
+            LambdaLogger.Log($"Successfully got {alertResult.Alerts.Count} location alerts for tenancy " + propertyReference);
 
             return alertResult;
         }
