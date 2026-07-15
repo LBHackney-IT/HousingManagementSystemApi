@@ -27,8 +27,11 @@ namespace HousingManagementSystemApi
         public static readonly IEnumerable<TenureType> EligibleTenureTypes = new List<TenureType>
         {
             TenureTypes.Introductory,
-            TenureTypes.Secure
+            TenureTypes.Secure,
+            TenureTypes.HomeOfficeNonSecure
         };
+
+
 
         public Startup(IConfiguration configuration)
         {
@@ -67,7 +70,6 @@ namespace HousingManagementSystemApi
 
             services.AddTransient<ITenureGateway, TenureGateway>();
             services.AddTransient<IAssetGateway, AssetGateway>();
-            //services.AddTransient<IAddressesGateway, PropertiesGateway>();
             services.AddTransient<IAddressesGateway, HousingSearchGateway>();
             services.AddTransient<IRepairsHubAlertsGateway, RepairsHubAlertsGateway>();
 

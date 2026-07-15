@@ -33,18 +33,6 @@ commands:
           root: *workspace_root
           paths:
             - .aws
-  authenticate-nuget:
-    parameters:
-      hackney-nuget-username:
-        type: string
-        default: $HACKNEY_NUGET_USERNAME
-      hackney-nuget-password:
-        type: string
-        default: $LBHPACKAGESTOKEN
-    steps:
-      - run:
-          name: Add NuGet package source
-          command: dotnet nuget add source --username <<parameters.hackney-nuget-username>> --password  <<parameters.hackney-nuget-password>>  --store-password-in-clear-text --name github "https://nuget.pkg.github.com/LBHackney-IT/index.json"
   deploy-lambda:
     description: "Deploys API via Serverless"
     parameters:
@@ -89,28 +77,16 @@ jobs:
     steps:
       - checkout
       - setup_remote_docker
-      - authenticate-nuget
       - run:
           name: build
           command: dotnet build HousingManagementSystemApi
       - run:
           name: Run tests
           command: dotnet test
-  deploy-to-development:
-    executor: docker-dotnet
-    steps:
-      - authenticate-nuget
-      - deploy-lambda:
-          stage: "development"
-  assume-role-development:
-    executor: docker-python
-    steps:
-      - assume-role-and-persist-workspace:
-          aws-account: $AWS_ACCOUNT_DEVELOPMENT
+ 
   deploy-to-staging:
     executor: docker-dotnet
     steps:
-      - authenticate-nuget
       - deploy-lambda:
           stage: "staging"
   assume-role-staging:
@@ -121,7 +97,6 @@ jobs:
   deploy-to-production:
     executor: docker-dotnet
     steps:
-      - authenticate-nuget
       - deploy-lambda:
           stage: "production"
   assume-role-production:
@@ -131,22 +106,6 @@ jobs:
           aws-account: $AWS_ACCOUNT_PRODUCTION
 
 workflows:
-  # check-and-deploy-development:
-  #   jobs:
-  #     - check-code-formatting:
-  #         context: api-nuget-token-context
-  #     - build-and-test:
-  #         context: api-nuget-token-context
-  #     - assume-role-development:
-  #         context: api-assume-role-housing-development-context
-  #         requires:
-  #           - build-and-test
-  #         filters:
-  #           branches:
-  #             only: development
-  #     - deploy-to-development:
-  #         requires:
-  #           - assume-role-development
   check-and-deploy-staging-and-production:
     jobs:
       - check-code-formatting:
