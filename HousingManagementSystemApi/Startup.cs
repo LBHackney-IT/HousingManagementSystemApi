@@ -70,7 +70,6 @@ namespace HousingManagementSystemApi
 
             services.AddTransient<ITenureGateway, TenureGateway>();
             services.AddTransient<IAssetGateway, AssetGateway>();
-            //services.AddTransient<IAddressesGateway, PropertiesGateway>();
             services.AddTransient<IAddressesGateway, HousingSearchGateway>();
             services.AddTransient<IRepairsHubAlertsGateway, RepairsHubAlertsGateway>();
 
