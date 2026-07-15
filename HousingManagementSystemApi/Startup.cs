@@ -31,7 +31,7 @@ namespace HousingManagementSystemApi
             TenureTypes.HomeOfficeNonSecure
         };
 
-        
+
 
         public Startup(IConfiguration configuration)
         {
