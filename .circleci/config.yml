@@ -33,18 +33,6 @@ commands:
           root: *workspace_root
           paths:
             - .aws
-  # authenticate-nuget:
-  #   parameters:
-  #     hackney-nuget-username:
-  #       type: string
-  #       default: $HACKNEY_NUGET_USERNAME
-  #     hackney-nuget-password:
-  #       type: string
-  #       default: $LBHPACKAGESTOKEN
-  #   steps:
-  #     - run:
-  #         name: Add NuGet package source
-  #         command: dotnet nuget add source --username <<parameters.hackney-nuget-username>> --password  <<parameters.hackney-nuget-password>>  --store-password-in-clear-text --name github "https://nuget.pkg.github.com/LBHackney-IT/index.json"
   deploy-lambda:
     description: "Deploys API via Serverless"
     parameters:
@@ -89,7 +77,6 @@ jobs:
     steps:
       - checkout
       - setup_remote_docker
-      # - authenticate-nuget
       - run:
           name: build
           command: dotnet build HousingManagementSystemApi
@@ -100,7 +87,6 @@ jobs:
   deploy-to-staging:
     executor: docker-dotnet
     steps:
-      # - authenticate-nuget
       - deploy-lambda:
           stage: "staging"
   assume-role-staging:
@@ -111,7 +97,6 @@ jobs:
   deploy-to-production:
     executor: docker-dotnet
     steps:
-      # - authenticate-nuget
       - deploy-lambda:
           stage: "production"
   assume-role-production:
